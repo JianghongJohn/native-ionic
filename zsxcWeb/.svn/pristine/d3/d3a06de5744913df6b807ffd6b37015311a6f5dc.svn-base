@@ -1,0 +1,24 @@
+//
+//  CreditInfoCell.h
+//  carFinance
+//
+//  Created by hyjt on 2017/4/17.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "CreditInfoItem.h"
+#import "CreditPersonStateView.h"
+
+typedef void(^CreditInfoCellBlock)();
+@interface CreditInfoCell : UITableViewCell
+@property (weak, nonatomic) IBOutlet UIView *viewBase;
+@property (weak, nonatomic) IBOutlet UILabel *labLoanBank;
+@property (weak, nonatomic) IBOutlet UILabel *labDealer;
+@property (weak, nonatomic) IBOutlet UILabel *labCheckTime;
+@property (weak, nonatomic) IBOutlet UILabel *labRefuse;
+@property (weak, nonatomic) IBOutlet UILabel *labTimeType;
+
+@property(nonatomic,strong)CreditInfoItem *item;
+@property(nonatomic,strong)CreditInfoCellBlock block;
+@end

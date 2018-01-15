@@ -1,0 +1,37 @@
+//
+//  JH_RuntimeTool.h
+//  haoqibaoyewu
+//
+//  Created by hyjt on 2016/11/28.
+//  Copyright © 2016年 jianghong. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface JH_RuntimeTool : NSObject
+//创建一个对象
++(id)creatClass:(NSString *)vcName;
+// push控制器
++ (void)runtimePush:(NSString *)vcName dic:(NSDictionary *)dic nav:(UINavigationController *)nav;
+/**
+ *  检测对象是否存在该属性
+ */
++ (BOOL)checkIsExistPropertyWithInstance:(id)instance verifyPropertyName:(NSString *)verifyPropertyName;
+
+
+/**
+ 获取协议列表
+ 
+ @param class 一个类
+ @return 协议数字
+ */
++ (NSArray *)fetchProtocolList:(Class)class;
+
+/**
+ 为一个类添加来自别的类的协议
+ 
+ @param class 目标类
+ @param fromClass 来源类
+ */
++(void)addProtocolForClass:(Class )class fromClass:(Class)fromClass;
+@end

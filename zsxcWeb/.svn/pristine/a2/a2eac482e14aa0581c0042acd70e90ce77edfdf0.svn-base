@@ -1,0 +1,114 @@
+//
+//  CarFinanceMainController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/4/26.
+//
+//
+
+#import "CarFinanceMainController.h"
+#import "Root_LoginController.h"
+#import "RootTabbarController.h"
+#import <IQKeyboardManager.h>
+@interface CarFinanceMainController ()
+
+@end
+
+@implementation CarFinanceMainController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+  //statusBar
+  [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleLightContent animated:YES];
+  
+    self.view.backgroundColor = [UIColor whiteColor];
+    Root_LoginController *login = [[Root_LoginController alloc] init];
+    RootTabbarController *tabbar = [[RootTabbarController alloc] init];
+    
+    [self addChildViewController:login];
+    [self addChildViewController:tabbar];
+    
+    if ([[JH_FileManager getObjectFromUserDefaultByKey:ktoken] isEqualToString:@""]) {
+        [self.view addSubview: self.childViewControllers[0].view];
+    }else{
+        [self.view addSubview: self.childViewControllers[1].view];
+    }
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setLogin) name:kSetLogin object:nil];
+    [[NSNotificationCenter defaultCenter]addObserver:self selector:@selector(setTabbar) name:kSetTabbar object:nil];
+    [self _setUpAppearance];
+}
+#pragma mark - setUp
+-(void)_setUpAppearance{
+    IQKeyboardManager *manager = [IQKeyboardManager sharedManager];
+    manager.enable = YES;
+    manager.shouldResignOnTouchOutside = YES;
+    manager.shouldToolbarUsesTextFieldTintColor = YES;
+    manager.enableAutoToolbar = YES;
+    
+    //  [[UIBarButtonItem appearance] setBackButtonTitlePositionAdjustment:UIOffsetMake(kScreen_Width, 0)
+    //                                                       forBarMetrics:UIBarMetricsDefault];
+    //  NSDictionary *navbarTitleTextAttributes = @{NSForegroundColorAttributeName: kBaseTextColor};
+    //  [[UINavigationBar appearance] setTitleTextAttributes:navbarTitleTextAttributes];
+    //  [[UINavigationBar appearance] setTintColor:kBaseTextColor];
+    //  [[UINavigationBar appearance] setBarTintColor: kBaseColor];
+    //
+    //  [[UITextField appearance] setTintColor:kBaseColor];
+    
+}
+
+-(void)dealloc{
+    [[NSNotificationCenter defaultCenter]removeObserver:self];
+}
+
+-(void)setLogin{
+    [UIView animateWithDuration:0.5 animations:^{
+        self.view.alpha = 0;
+    } completion:^(BOOL finished) {
+        for (UIView *view in self.view.subviews) {
+            [view removeFromSuperview];
+        }
+        [self.view addSubview: self.childViewControllers[0].view];
+        [UIView animateWithDuration:0.5 animations:^{
+            self.view.alpha = 1;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }];
+    
+}
+-(void)setTabbar{
+
+    [UIView animateWithDuration:0.5 animations:^{
+        self.view.alpha = 0.5;
+    } completion:^(BOOL finished) {
+        for (UIView *view in self.view.subviews) {
+            [view removeFromSuperview];
+        }
+        [self.view addSubview: self.childViewControllers[1].view];
+        //重新加载页面
+//        [self.childViewControllers[1] viewDidLoad];
+        
+        [UIView animateWithDuration:0.5 animations:^{
+            self.view.alpha = 1;
+        } completion:^(BOOL finished) {
+            
+        }];
+    }];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

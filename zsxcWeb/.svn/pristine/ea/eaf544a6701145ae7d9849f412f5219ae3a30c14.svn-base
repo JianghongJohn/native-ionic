@@ -1,0 +1,438 @@
+[
+  {
+    "name": "基础版",
+    "insurances": [
+      {
+        "name": "交强险/车船税",
+        "code": "A13500/A13509",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": true
+      },
+      {
+        "name": "车辆损失险",
+        "code": "A13423",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true
+      },
+      {
+        "name": "第三者责任险",
+        "code": "A13424",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "20万",
+        "selectedValue": "200000",
+        "selectedType": "金额",
+        "selectList": [{"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}, {"name": "30万", "value": "300000"}, {"name": "50万", "value": "500000"}, {"name": "100万", "value": "1000000"}, {"name": "150万", "value": "1500000"}, {"name": "200万", "value": "2000000"}]
+      },
+      {
+        "name": "全车盗抢险",
+        "code": "A13425",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": false
+      },
+      {
+        "name": "司机责任险",
+        "code": "A13456",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": false,
+        "selectedName": "1万",
+        "selectedValue": "10000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}, {"name": "3万", "value": "30000"}, {"name": "4万", "value": "40000"}, {"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}]
+      },
+      {
+        "name": "乘客责任险",
+        "code": "A13455",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": false,
+        "selectedName": "1万/座",
+        "selectedValue": "10000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万/座", "value": "10000"}, {"name": "2万/座", "value": "20000"}, {"name": "3万/座", "value": "30000"}, {"name": "4万/座", "value": "40000"}, {"name": "5万/座", "value": "50000"}, {"name": "10万/座", "value": "100000"}, {"name": "20万/座", "value": "200000"}]
+      },
+      {
+        "name": "玻璃破碎险",
+        "code": "A13429",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": false,
+        "selectedName": "国产",
+        "selectedValue": "02",
+        "selectedType": "玻璃",
+        "selectList": [{"name": "国产", "value": "02"}, {"name": "进口", "value": "03"}]
+      },
+      {
+        "name": "划痕险",
+        "code": "A13428",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false,
+        "selectedName": "2千",
+        "selectedValue": "2000",
+        "selectedType": "金额",
+        "selectList": [{"name": "2千", "value": "2000"}, {"name": "5千", "value": "5000"}, {"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}]
+      },
+      {
+        "name": "自燃险",
+        "code": "A13441",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false
+      },
+      {
+        "name": "涉水险",
+        "code": "A13432",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false
+      },
+      {
+        "name": "指定专修厂特约险",
+        "code": "A13431",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": false
+      }
+    ]
+  },
+  {
+    "name": "大众版",
+    "insurances": [
+      {
+        "name": "交强险/车船税",
+        "code": "A13500/A13509",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": true
+      },
+      {
+        "name": "车辆损失险",
+        "code": "A13423",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true
+      },
+      {
+        "name": "第三者责任险",
+        "code": "A13424",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "50万",
+        "selectedValue": "500000",
+        "selectedType": "金额",
+        "selectList": [{"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}, {"name": "30万", "value": "300000"}, {"name": "50万", "value": "500000"}, {"name": "100万", "value": "1000000"}, {"name": "150万", "value": "1500000"}, {"name": "200万", "value": "2000000"}]
+      },
+      {
+        "name": "全车盗抢险",
+        "code": "A13425",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": false
+      },
+      {
+        "name": "司机责任险",
+        "code": "A13456",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "1万",
+        "selectedValue": "10000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}, {"name": "3万", "value": "30000"}, {"name": "4万", "value": "40000"}, {"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}]
+      },
+      {
+        "name": "乘客责任险",
+        "code": "A13455",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "1万/座",
+        "selectedValue": "10000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万/座", "value": "10000"}, {"name": "2万/座", "value": "20000"}, {"name": "3万/座", "value": "30000"}, {"name": "4万/座", "value": "40000"}, {"name": "5万/座", "value": "50000"}, {"name": "10万/座", "value": "100000"}, {"name": "20万/座", "value": "200000"}]
+      },
+      {
+        "name": "玻璃破碎险",
+        "code": "A13429",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": false,
+        "selectedName": "国产",
+        "selectedValue": "02",
+        "selectedType": "玻璃",
+        "selectList": [{"name": "国产", "value": "02"}, {"name": "进口", "value": "03"}]
+      },
+      {
+        "name": "划痕险",
+        "code": "A13428",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false,
+        "selectedName": "2千",
+        "selectedValue": "2000",
+        "selectedType": "金额",
+        "selectList": [{"name": "2千", "value": "2000"}, {"name": "5千", "value": "5000"}, {"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}]
+      },
+      {
+        "name": "自燃险",
+        "code": "A13441",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false
+      },
+      {
+        "name": "涉水险",
+        "code": "A13432",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false
+      },
+      {
+        "name": "指定专修厂特约险",
+        "code": "A13431",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": false
+      }
+    ]
+  },
+  {
+    "name": "豪华版",
+    "insurances": [
+      {
+        "name": "交强险/车船税",
+        "code": "A13500/A13509",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": true
+      },
+      {
+        "name": "车辆损失险",
+        "code": "A13423",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true
+      },
+      {
+        "name": "第三者责任险",
+        "code": "A13424",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "100万",
+        "selectedValue": "1000000",
+        "selectedType": "金额",
+        "selectList": [{"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}, {"name": "30万", "value": "300000"}, {"name": "50万", "value": "500000"}, {"name": "100万", "value": "1000000"}, {"name": "150万", "value": "1500000"}, {"name": "200万", "value": "2000000"}]
+      },
+      {
+        "name": "全车盗抢险",
+        "code": "A13425",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": false
+      },
+      {
+        "name": "司机责任险",
+        "code": "A13456",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "10万",
+        "selectedValue": "100000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}, {"name": "3万", "value": "30000"}, {"name": "4万", "value": "40000"}, {"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}]
+      },
+      {
+        "name": "乘客责任险",
+        "code": "A13455",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "5万/座",
+        "selectedValue": "50000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万/座", "value": "10000"}, {"name": "2万/座", "value": "20000"}, {"name": "3万/座", "value": "30000"}, {"name": "4万/座", "value": "40000"}, {"name": "5万/座", "value": "50000"}, {"name": "10万/座", "value": "100000"}, {"name": "20万/座", "value": "200000"}]
+      },
+      {
+        "name": "玻璃破碎险",
+        "code": "A13429",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": true,
+        "selectedName": "国产",
+        "selectedValue": "02",
+        "selectedType": "玻璃",
+        "selectList": [{"name": "国产", "value": "02"}, {"name": "进口", "value": "03"}]
+      },
+      {
+        "name": "划痕险",
+        "code": "A13428",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "1万",
+        "selectedValue": "10000",
+        "selectedType": "金额",
+        "selectList": [{"name": "2千", "value": "2000"}, {"name": "5千", "value": "5000"}, {"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}]
+      },
+      {
+        "name": "自燃险",
+        "code": "A13441",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false
+      },
+      {
+        "name": "涉水险",
+        "code": "A13432",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true
+      },
+      {
+        "name": "指定专修厂特约险",
+        "code": "A13431",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": false
+      }
+    ]
+  },
+  {
+    "name": "自定义",
+    "insurances": [
+      {
+        "name": "交强险/车船税",
+        "code": "A13500/A13509",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": true
+      },
+      {
+        "name": "车辆损失险",
+        "code": "A13423",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true
+      },
+      {
+        "name": "第三者责任险",
+        "code": "A13424",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "50万",
+        "selectedValue": "500000",
+        "selectedType": "金额",
+        "selectList": [{"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}, {"name": "30万", "value": "300000"}, {"name": "50万", "value": "500000"}, {"name": "100万", "value": "1000000"}, {"name": "150万", "value": "1500000"}, {"name": "200万", "value": "2000000"}]
+      },
+      {
+        "name": "全车盗抢险",
+        "code": "A13425",
+        "isAdditional": false,
+        "hasIop": false,
+        "checked": true
+      },
+      {
+        "name": "司机责任险",
+        "code": "A13456",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "1万",
+        "selectedValue": "10000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}, {"name": "3万", "value": "30000"}, {"name": "4万", "value": "40000"}, {"name": "5万", "value": "50000"}, {"name": "10万", "value": "100000"}, {"name": "20万", "value": "200000"}]
+      },
+      {
+        "name": "乘客责任险",
+        "code": "A13455",
+        "isAdditional": false,
+        "hasIop": true,
+        "isIop": true,
+        "checked": true,
+        "selectedName": "1万/座",
+        "selectedValue": "10000",
+        "selectedType": "金额",
+        "selectList": [{"name": "1万/座", "value": "10000"}, {"name": "2万/座", "value": "20000"}, {"name": "3万/座", "value": "30000"}, {"name": "4万/座", "value": "40000"}, {"name": "5万/座", "value": "50000"}, {"name": "10万/座", "value": "100000"}, {"name": "20万/座", "value": "200000"}]
+      },
+      {
+        "name": "玻璃破碎险",
+        "code": "A13429",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": false,
+        "selectedName": "国产",
+        "selectedValue": "02",
+        "selectedType": "玻璃",
+        "selectList": [{"name": "国产", "value": "02"}, {"name": "进口", "value": "03"}]
+      },
+      {
+        "name": "划痕险",
+        "code": "A13428",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false,
+        "selectedName": "2千",
+        "selectedValue": "2000",
+        "selectedType": "金额",
+        "selectList": [{"name": "2千", "value": "2000"}, {"name": "5千", "value": "5000"}, {"name": "1万", "value": "10000"}, {"name": "2万", "value": "20000"}]
+      },
+      {
+        "name": "自燃险",
+        "code": "A13441",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false
+      },
+      {
+        "name": "涉水险",
+        "code": "A13432",
+        "isAdditional": true,
+        "hasIop": true,
+        "isIop": false,
+        "checked": false
+      },
+      {
+        "name": "指定专修厂特约险",
+        "code": "A13431",
+        "isAdditional": true,
+        "hasIop": false,
+        "checked": false
+      }
+    ]
+  }
+]

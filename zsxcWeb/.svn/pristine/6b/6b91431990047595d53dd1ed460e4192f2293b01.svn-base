@@ -1,0 +1,115 @@
+//
+//  JHDownLoadFile.m
+//  carFinance
+//
+//  Created by hyjt on 2017/4/20.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import "JHDownLoadFile.h"
+
+@implementation JHDownLoadFile
+
+/**
+ 获取数据字典
+ @param resullt block
+ */
++(void)getDicByKey:(NSString *)key addInfo:(NSDictionary *)info :(void(^)(id result))resullt{
+    if (info) {
+        NSMutableDictionary *dic = [NSMutableDictionary dictionaryWithDictionary:info];
+        [dic setObject:key forKey:@"type"];
+        [JH_NetWorking requestData:[kBaseUrlStr_Local2 stringByAppendingString:kdict] HTTPMethod:HttpMethodGet showHud:NO params:[JH_NetWorking addKeyAndUIdForRequest:dic] completionHandle:^(id result) {
+            if ([result[@"code"]isEqualToString:@"10000"]) {
+                [[self class]addDictionaryToLocol:key data:result[@"combox"]];
+                resullt(result);
+            }else{
+                
+            }
+            
+        } errorHandle:^(NSError *error) {
+            
+        }];
+        return;
+    }
+    
+    [JH_NetWorking requestData:[kBaseUrlStr_Local2 stringByAppendingString:kdict] HTTPMethod:HttpMethodGet showHud:NO params:[JH_NetWorking addKeyAndUIdForRequest:@{@"type":key}] completionHandle:^(id result) {
+        if ([result[@"code"]isEqualToString:@"10000"]) {
+            [[self class]addDictionaryToLocol:key data:result[@"combox"]];
+            resullt(result);
+        }else{
+            
+        }
+        
+    } errorHandle:^(NSError *error) {
+        
+    }];
+}
+
+/**
+ 将数据添加到本地
+ */
++(void)addDictionaryToLocol:(NSString *)key data:(NSArray *)data{
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+//    DebugLog(@"%@",documentPath);
+    NSString *dirPath = [NSString stringWithFormat:@"%@/DICTIONARY",documentPath];
+    [JH_FileManager creatDir:dirPath];
+    NSString *fileName = [NSString stringWithFormat:@"%@/%@.plist",dirPath,key];
+    //判断是否文件存在
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileName]){
+        [JH_FileManager deleteFile:fileName];
+    }
+    //写入文件
+    [data writeToFile:fileName atomically:YES];
+    
+}
+
+/**
+ 数据字典专属根据id查找页面展示的方法
+
+ @param key 数据字典类型
+ @param dicId id
+ @return 描述
+ */
++(NSString *)getDictionTextByKey:(NSString *)key withId:(NSString *)dicId{
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+//    DebugLog(@"%@",documentPath);
+    NSString *dirPath = [NSString stringWithFormat:@"%@/DICTIONARY",documentPath];
+    [JH_FileManager creatDir:dirPath];
+    NSString *fileName = [NSString stringWithFormat:@"%@/%@.plist",dirPath,key];
+    //判断是否文件存在
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileName]){
+        
+        NSArray *array = [NSArray arrayWithContentsOfFile:fileName];
+        for (NSDictionary *dic in array) {
+            //匹配id
+            if ([[NSString stringWithFormat:@"%@",dic[@"value"]]isEqualToString:dicId]) {
+                return dic[@"text"];
+            }
+        }
+        return @"";
+    }else{
+//        kTipAlert(@"数据字典获取失败，请重新登录或者与管理员联系！");
+        return @"";
+    }
+}
+/**
+ 根据key将数据返回
+ 
+ @return nsarray
+ */
++(NSArray *)getArrayByKey:(NSString *)key{
+    NSString *documentPath = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES).firstObject;
+    //    DebugLog(@"%@",documentPath);
+    NSString *dirPath = [NSString stringWithFormat:@"%@/DICTIONARY",documentPath];
+    [JH_FileManager creatDir:dirPath];
+    NSString *fileName = [NSString stringWithFormat:@"%@/%@.plist",dirPath,key];
+    //判断是否文件存在
+    if ([[NSFileManager defaultManager] fileExistsAtPath:fileName]){
+        
+        NSArray *array = [NSArray arrayWithContentsOfFile:fileName];
+        return array;
+    }
+    return nil;
+}
+
+@end

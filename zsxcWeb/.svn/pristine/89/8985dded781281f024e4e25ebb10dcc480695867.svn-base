@@ -1,0 +1,69 @@
+//
+//  InTimeSignListViewModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/31.
+//
+//
+
+#import "InTimeSignListViewModel.h"
+#import "InTimeSignListCell.h"
+@implementation InTimeSignListViewModel
+/**
+ 获取列表数据
+ */
+-(void)JH_loadDataWithPage:(NSInteger)page data:(NSMutableDictionary *)data completionHandle:(void (^)(id result))completionblock errorHandle:(void (^)(NSError * error))errorblock ressultHandle:(void (^)(JHRefreshState refreshSate))resultBlock{
+    if (page==1) {
+        _dataList = [[NSMutableArray alloc] init];
+    }
+    
+    completionblock(nil);
+}
+/**
+ 将行数放回给VC
+ 
+ @return 行数
+ */
+-(NSInteger)JH_numberOfSection{
+    return 1;
+}
+/**
+ 将列数放回给VC
+ 
+ @param section 行数
+ @return 列数
+ */
+-(NSInteger)JH_numberOfRow:(NSInteger)section{
+//   return _dataList.count;
+    return 1;
+}
+/**
+ 返回单元格高度
+ 
+ @param indexPath NSIndexPath
+ @return 高度
+ */
+-(CGFloat)JH_heightForCell:(NSIndexPath *)indexPath{
+    return 110;
+}
+/**
+ 直接放回cell给VC,传递tableView
+ 
+ @param indexPath indexPath 提供回调方法
+ 
+ @return cell
+ */
+-(UITableViewCell *)JH_setUpTableViewCell:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath WithHandle:(void(^)())completionBlock{
+    static NSString *CellIdentifier = @"Cell";
+    BOOL nibsRegistered = NO;
+    if (!nibsRegistered) {
+        UINib *nib = [UINib nibWithNibName:NSStringFromClass([InTimeSignListCell class]) bundle:nil];
+        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
+        nibsRegistered = YES;
+    }
+    InTimeSignListCell *cell = (InTimeSignListCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    return cell;
+}
+
+@end

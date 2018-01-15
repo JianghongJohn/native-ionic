@@ -1,0 +1,110 @@
+//
+//  SVCalculatePriceController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/8/10.
+//
+//
+
+#import "SVCalculatePriceController.h"
+#import "SVCalculatePriceViewModel.h"
+@interface SVCalculatePriceController ()<UITableViewDelegate,UITableViewDataSource>
+@property(nonatomic,strong)UITableView *tableView;
+@property(nonatomic,strong)SVCalculatePriceViewModel *viewModel;
+@end
+
+@implementation SVCalculatePriceController
+
+#pragma mark - system (systemMethod override)
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.title = @"车贷计算器";
+    if (self.navigationController.viewControllers.count==1) {
+        [self _creatBackButton];
+    }
+    
+    _viewModel = [[SVCalculatePriceViewModel alloc] init];
+    [self.tableView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(0, 0, 0, 0));
+    }];
+    _viewModel.car = [[CalculatePriceModel alloc] init];
+    WeakSelf
+    [_viewModel setCalculateBlock:^{
+        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:1] withRowAnimation:UITableViewRowAnimationAutomatic];
+//        [MBProgressHUD MBProgressShowTextViewWithTitle:@"正在计算..." view:nil];
+    }];
+}
+//增加返回按钮
+-(void)_creatBackButton{
+    
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:0 target:self action:@selector(dismiss)];
+    
+}
+
+-(void)dismiss{
+    [self dismissViewControllerAnimated:YES completion:^{
+        //statusBar
+        [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleDefault animated:YES];
+    }];
+}
+#pragma mark - UI (creatSubView and layout)
+-(UITableView *)tableView{
+    if (!_tableView) {
+        _tableView = ({
+            UITableView *table =  [[UITableView alloc] initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+            [self.view addSubview:table];
+            table.delegate = self;
+            table.dataSource = self;
+            table;
+        });
+        
+    }
+    return _tableView;
+    
+}
+
+#pragma mark - delegate
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return [_viewModel JH_numberOfSection];
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [_viewModel JH_numberOfRow:section];
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return [_viewModel JH_heightForCell:indexPath];
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return [_viewModel JH_heightForSectionHeader:section];
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return [_viewModel JH_heightForSectionFooter:section];
+}
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;{
+    WeakSelf
+    return [_viewModel JH_setUpTableViewCell:tableView indexPath:indexPath WithHandle:^{
+        [weakSelf.tableView reloadData];
+    }];
+}
+-(UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section{
+    return [_viewModel JH_setUpTableSectionHeader:section];
+
+}
+-(UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section{
+    return [_viewModel JH_setUpTableSectionFooter:section];
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    if (indexPath.section==0) {
+        if (indexPath.row<4) {
+            [self.tableView endEditing:YES];
+        }
+    }
+    WeakSelf
+    return [_viewModel disSelectRowWithIndexPath:indexPath WithHandle:^{
+        [weakSelf.tableView reloadSections:[NSIndexSet indexSetWithIndex:0] withRowAnimation:0];
+    }];
+}
+
+#pragma mark - utilMethod
+
+@end

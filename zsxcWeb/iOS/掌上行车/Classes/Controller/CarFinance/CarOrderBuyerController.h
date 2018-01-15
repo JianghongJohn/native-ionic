@@ -1,0 +1,14 @@
+//
+//  CarOrderBuyerController.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/8.
+//
+//
+
+#import "Root_BaseController.h"
+#import "CarOrderBuyerViewModel.h"
+@interface CarOrderBuyerController : Root_BaseController
+@property(nonatomic,strong)CarOrderBuyerViewModel *viewModel;
+@property(nonatomic,assign)BOOL notAllowedEdit;
+@end

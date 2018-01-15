@@ -1,0 +1,18 @@
+//
+//  InTimeSignPersonViewModel.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/6/1.
+//
+//
+
+#import "JH_ViewModelFactory.h"
+#import "InTimeSignModel.h"
+@interface InTimeSignPersonViewModel : JH_ViewModelFactory
+@property(nonatomic,strong)NSIndexPath *currentIndexPath;
+@property(nonatomic,strong)InTimeSignModel *model;
+//getStaticData
+-(NSString *)getData:(DataType)dataType WithRow:(NSInteger)row;
+//cellwillAooare
+-(void)UIViewController:(UIViewController *)vc willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath;
+@end

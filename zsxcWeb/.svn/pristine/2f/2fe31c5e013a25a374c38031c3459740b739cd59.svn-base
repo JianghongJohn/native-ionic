@@ -1,0 +1,29 @@
+//
+//  CreditGuaranteeViewModel.m
+//  carFinance
+//
+//  Created by 江弘 on 2017/4/16.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import "CreditGuaranteeViewModel.h"
+
+@implementation CreditGuaranteeViewModel
+//担保人标志
+-(NSDictionary *)testData{
+    return @{@"type":@"SPONSOR"
+             };
+}
+//add
+-(BOOL)_AddNewData{
+    
+    if ((self.dataList.count+_baseNumber)<4) {
+        
+        [self.dataList addObject:[CreditBuyerModel mj_objectWithKeyValues:[self testData]]];
+        return YES;
+    }else{
+        kTipAlert(@"担保人最多只能有4人")
+        return NO;
+    }
+}
+@end

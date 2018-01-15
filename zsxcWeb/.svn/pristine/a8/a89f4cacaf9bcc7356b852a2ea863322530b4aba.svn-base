@@ -1,0 +1,13 @@
+//
+//  MediaModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/6/2.
+//
+//
+
+#import "MediaModel.h"
+
+@implementation MediaModel
+
+@end

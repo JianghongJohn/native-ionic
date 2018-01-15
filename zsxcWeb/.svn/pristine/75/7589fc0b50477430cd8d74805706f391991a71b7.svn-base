@@ -1,0 +1,11 @@
+platform :ios, '8.0'
+target '掌上行车' do
+    pod 'AFNetworking'
+    pod 'SDWebImage'
+    pod 'Masonry'
+    pod 'MJExtension'
+    pod 'MJRefresh'
+    pod 'IQKeyboardManager'
+    pod 'MBProgressHUD'
+    pod 'TZImagePickerController'
+end

@@ -1,0 +1,65 @@
+//
+//  ImTimeSignGPSViewModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/31.
+//
+//
+
+#import "InTimeSignGPSViewModel.h"
+#import "InTimeLocationCell.h"
+@implementation InTimeSignGPSViewModel
+/**
+ 获取列表数据
+ */
+-(void)JH_loadTableDataWithData:(NSDictionary *)data :(void (^)())resultBlock{
+    _dataList = [[NSMutableArray alloc] init];
+    
+}
+/**
+ 将行数放回给VC
+ 
+ @return 行数
+ */
+-(NSInteger)JH_numberOfSection{
+    return 1;
+}
+/**
+ 将列数放回给VC
+ 
+ @param section 行数
+ @return 列数
+ */
+-(NSInteger)JH_numberOfRow:(NSInteger)section{
+    //   return _dataList.count;
+    return 10;
+}
+/**
+ 返回单元格高度
+ 
+ @param indexPath NSIndexPath
+ @return 高度
+ */
+-(CGFloat)JH_heightForCell:(NSIndexPath *)indexPath{
+    return 80;
+}
+/**
+ 直接放回cell给VC,传递tableView
+ 
+ @param indexPath indexPath 提供回调方法
+ 
+ @return cell
+ */
+-(UITableViewCell *)JH_setUpTableViewCell:(UITableView *)tableView indexPath:(NSIndexPath *)indexPath WithHandle:(void(^)())completionBlock{
+    static NSString *CellIdentifier = @"Cell";
+    BOOL nibsRegistered = NO;
+    if (!nibsRegistered) {
+        UINib *nib = [UINib nibWithNibName:NSStringFromClass([InTimeLocationCell class]) bundle:nil];
+        [tableView registerNib:nib forCellReuseIdentifier:CellIdentifier];
+        nibsRegistered = YES;
+    }
+    InTimeLocationCell *cell = (InTimeLocationCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    
+    return cell;
+}
+@end

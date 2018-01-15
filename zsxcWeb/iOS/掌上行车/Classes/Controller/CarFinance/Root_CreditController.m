@@ -1,0 +1,340 @@
+//
+//  Root_CreditController.m
+//  carFinance
+//
+//  Created by hyjt on 2017/4/12.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import "Root_CreditController.h"
+#import "CreditBuyerController.h"
+#import "CreditGuaranteeController.h"
+#import "CreditTogetherBuyerController.h"
+#import "JHMenuControlView.h"
+@interface Root_CreditController ()<UIGestureRecognizerDelegate>
+@property (nonatomic, strong) JHMenuControlView *cursorView;
+@property (nonatomic, strong)CreditBuyerController *buyer;
+@property (nonatomic, strong)CreditTogetherBuyerController *togetherBuyer;
+@property (nonatomic, strong)CreditGuaranteeController *guarantee;
+@end
+static const CGFloat menuHeight = 40;
+
+@implementation Root_CreditController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.navigationItem.title = @"征信录入";
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    self.navigationItem.leftBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"button_back"] style:0 target:self action:@selector(navigationShouldPopOnBackButton)];
+    [self _creatSubmitButton];
+    [self _addChidVC];
+    
+}
+//关于导航栏右滑动作禁止，点击返回拦截的操作
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    // 禁用 iOS7 返回手势
+        if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+    
+            self.navigationController.interactivePopGestureRecognizer.enabled = NO;
+        }
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    // 开启
+        if ([self.navigationController respondsToSelector:@selector(interactivePopGestureRecognizer)]) {
+    
+            self.navigationController.interactivePopGestureRecognizer.enabled = YES;
+        }
+}
+/**
+ 点击退出主动拦截
+ */
+- (void)navigationShouldPopOnBackButton{
+    UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:@"您确认要关闭征信录入？" preferredStyle:UIAlertControllerStyleAlert];
+    UIAlertAction *actionCertain = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+        //popVC
+        [self.navigationController popViewControllerAnimated:YES];
+    }];
+    UIAlertAction *actionCancel = [UIAlertAction actionWithTitle:@"取消" style:UIAlertActionStyleCancel handler:nil];
+    [alertController addAction:actionCertain];
+    [alertController addAction:actionCancel];
+    [self  presentViewController:alertController animated:YES completion:nil];
+    
+}
+
+/**
+ submitButton
+ */
+-(void)_creatSubmitButton{
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"提交" style:0 target:self action:@selector(_submitAction)];
+}
+
+
+
+/**
+ childVC
+ */
+-(void)_addChidVC{
+    
+    NSArray *titles = @[@"购车人",@"配偶",@"担保人"];
+    //设置所有子controller
+    NSMutableArray *contrors = [NSMutableArray array];
+    //现在购车人和担保人一样
+    _buyer = [[CreditBuyerController alloc] init];
+    _togetherBuyer = [[CreditTogetherBuyerController alloc] init];
+    _guarantee = [[CreditGuaranteeController alloc] init];
+    //传递来自征信详情的数据
+    if (self.viewModel) {
+        for (NSString *key in [self keys]) {
+            if (!_buyer.viewModel) {
+                _buyer.viewModel = [[CreditBuyerViewModel alloc] init];
+                _buyer.viewModel.model = [[CreditBuyerModel alloc] init];
+            }
+            [_buyer.viewModel.model setValue:[self.viewModel.model.buyer valueForKey:key] forKey:key];
+        }
+        //还有额外的经销商，银行,类型*
+        _buyer.viewModel.model.loanBank = self.viewModel.model.loanbank;
+        _buyer.viewModel.model.dealer = self.viewModel.model.deler;
+        //配偶
+        
+        for (CreditBuyerDetailModel *detailModel in self.viewModel.model.togetherBuyer) {
+            if (!_togetherBuyer.viewModel) {
+                _togetherBuyer.viewModel = [[CreditTogetherViewModel alloc] init];
+                _togetherBuyer.viewModel.dataList = [NSMutableArray array];
+            }
+            CreditBuyerModel *model = [[CreditBuyerModel alloc] init];
+            for (NSString *key in [self keys]) {
+                [model setValue:[detailModel valueForKey:key] forKey:key];
+            }
+            [_togetherBuyer.viewModel.dataList addObject:model];
+        }
+        //担保人
+
+        for (CreditBuyerDetailModel *detailModel in self.viewModel.model.guarantee) {
+            if (!_guarantee.viewModel) {
+                _guarantee.viewModel = [[CreditGuaranteeViewModel alloc] init];
+                _guarantee.viewModel.dataList = [NSMutableArray array];
+            }
+            CreditBuyerModel *model = [[CreditBuyerModel alloc] init];
+            for (NSString *key in [self keys]) {
+                [model setValue:[detailModel valueForKey:key] forKey:key];
+            }
+            [_guarantee.viewModel.dataList addObject:model];
+        }
+        
+    }
+    
+    [contrors addObject:_buyer];
+    [contrors addObject:_togetherBuyer];
+    [contrors addObject:_guarantee];
+    
+    _cursorView = [[JHMenuControlView alloc]initWithFrame:CGRectMake(0, kNavHeight, CGRectGetWidth(self.view.bounds),menuHeight) withParentViewController:self withTitles:titles withControllers:[contrors copy] withOnePageCount:3];
+    //设置子页面容器的高度
+    _cursorView.contentViewHeight = kScreen_Height-menuHeight-kNavHeight;
+    
+    //设置字体和颜色
+    //    _cursorView.normalColor = [UIColor blackColor];
+    _cursorView.selectedColor = kBaseColor;
+    //    _cursorView.selectedFont = [UIFont systemFontOfSize:16];
+    //    _cursorView.normalFont = [UIFont systemFontOfSize:13];
+    //    _cursorView.backgroundColor = [UIColor whiteColor];
+    _cursorView.lineView.backgroundColor = kBaseColor;
+    
+    [self.view addSubview:_cursorView];
+    
+    //属性设置完成后，调用此方法绘制界面
+    [_cursorView reloadPages];
+}
+
+/**
+ submit
+ */
+-(void)_submitAction{
+    [self.view endEditing:YES];
+    //NSAssert([_togetherBuyer.viewModel.dataList firstObject], @"没有数据");
+    
+    //首先是经销商和银行
+    __block NSString *message = @"";
+    if (_buyer.viewModel.model.loanBank == nil) {
+        message = [message stringByAppendingString:@"、贷款银行"];
+    }
+    //    if (_buyer.viewModel.model.dealer == nil) {
+    //        message = [message stringByAppendingString:@"、经销商"];
+    //    }
+    message = [self CheckDataByModel:_buyer.viewModel.model message:message person:@"购车人："];
+    
+    DebugLog(@"购车人%@",_buyer.viewModel.model.name);
+    [_togetherBuyer.viewModel.dataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        CreditBuyerModel *model = obj;
+        message = [message stringByAppendingString:[self CheckDataByModel:model message:@"" person:[NSString stringWithFormat:@"%@%d：",@"配偶",idx+1]]];
+    }];
+    
+    //    for (CreditBuyerModel *model in _togetherBuyer.viewModel.dataList) {
+    //        message = [message stringByAppendingString:[self CheckDataByModel:model message:@"" person:@"配偶"]];
+    //        DebugLog(@"配偶%@",model.name);
+    //    }
+    [_guarantee.viewModel.dataList enumerateObjectsUsingBlock:^(id  _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+        CreditBuyerModel *model = obj;
+        message = [message stringByAppendingString:[self CheckDataByModel:model message:@"" person:[NSString stringWithFormat:@"%@%d：",@"担保人",idx+1]]];
+        
+    }];
+    //    for (CreditBuyerModel *model in _guarantee.viewModel.dataList) {
+    //        message = [message stringByAppendingString:[self CheckDataByModel:model message:@"" person:@"担保人"]];
+    //        DebugLog(@"担保人%@",model.name);
+    //    }
+    if ([message isEqualToString:@""]) {
+        //验证通过提交数据
+        [self submitData];
+    }else{
+        kTipAlert(@"请检查\n%@",message);
+    }
+}
+-(NSArray *)keys{
+    return @[@"authletterPhotoFilegroup",
+             @"authletterPhotoFilename",
+             @"authletterPhotoFilepath",
+             @"cardno",
+             @"cardnoBackphotoFilegroup",
+             @"cardnoBackphotoFilename",
+             @"cardnoBackphotoFilepath",
+             @"cardnoFrontphotoFilegroup",
+             @"cardnoFrontphotoFilename",
+             @"cardnoFrontphotoFilepath",
+             @"creditRecord",
+             @"name",
+             @"signaturePhotoFilegroup",
+             @"signaturePhotoFilename",
+             @"signaturePhotoFilepath",
+             @"type",];
+    
+}
+/**
+ 验证数据正确性，并并拼接错误信息
+ */
+-(NSString *)CheckDataByModel:(CreditBuyerModel *)model message:(NSString *)message person:(NSString *)person{
+    if (model.name.length==0||model.name==nil) {
+        message = [message stringByAppendingString:@"、姓名"];
+    }
+//    if (![JHCheckUtil checkTelNumber:model.tel]) {
+//        message = [message stringByAppendingString:@"、手机号"];
+//    }
+    if (![JHCheckUtil checkUserIdCard:model.cardno]) {
+        message = [message stringByAppendingString:@"、身份证号"];
+    }
+//    if (model.sex==nil) {
+//        message = [message stringByAppendingString:@"、性别"];
+//    }
+    if (model.cardnoFrontphotoFile==nil) {
+       message = [message stringByAppendingString:@"、身份证正面照片"];
+    }
+    if (model.cardnoFrontphotoFile==nil) {
+        message = [message stringByAppendingString:@"、身份证反面照片"];
+    }
+    if (model.cardnoFrontphotoFile==nil) {
+        message = [message stringByAppendingString:@"、授权书照片"];
+    }
+    if (model.signaturePhotoFile==nil) {
+        message = [message stringByAppendingString:@"、签字照片"];
+    }
+    //处理当前这个人的信息
+    if (message.length>1) {
+        
+        message = [message substringFromIndex:1];
+        message = [NSString stringWithFormat:@"%@%@\n",person,message];
+    }
+    
+    return message;
+}
+
+/**
+ 最后的提交数据的操作
+ */
+-(void)submitData{
+    NSMutableDictionary *finalData = [[NSMutableDictionary alloc] init];
+    //银行、经销商、类型
+
+//    [finalData setObject:_buyer.viewModel.model.loanBank forKey:@"o_back_id"];
+//    [finalData setObject:_buyer.viewModel.model.dealer forKey:@"dealer"];
+//    [finalData setObject:@"CARLOAN" forKey:@"type"];
+    //人员信息
+    NSMutableArray *buyerInfoDtos = [[NSMutableArray alloc]init];
+    //添加银行经
+    NSDictionary *bankData = @{@"o_back"://银行
+                               [JHDownLoadFile getDictionTextByKey:@"bank" withId:_buyer.viewModel.model.loanBank],
+                               @"o_back_id":_buyer.viewModel.model.loanBank};
+    [buyerInfoDtos addObject:bankData];
+    //添加购车人
+    NSDictionary *buyer = @{
+                            @"cm_type": @"购车人",
+                            @"o_vip_name": _buyer.viewModel.model.name,
+                                @"o_vip_card": _buyer.viewModel.model.cardno,
+                                @"card_name": @[@"身份证正面",@"身份证反面",@"授权书",@"签字照"],
+                            @"card_url": @[_buyer.viewModel.model.cardnoFrontphotoFilepath, _buyer.viewModel.model.cardnoBackphotoFilepath, _buyer.viewModel.model.authletterPhotoFilepath, _buyer.viewModel.model.signaturePhotoFilepath],
+                            @"card_id": @[_buyer.viewModel.model.cardnoFrontphotoFilegroup, _buyer.viewModel.model.cardnoBackphotoFilegroup, _buyer.viewModel.model.authletterPhotoFilegroup, _buyer.viewModel.model.signaturePhotoFilegroup]
+                            };
+    //添加配偶
+    [buyerInfoDtos addObject:buyer];
+    for (CreditBuyerModel *model in _togetherBuyer.viewModel.dataList) {
+       
+        NSDictionary *person = @{
+          @"cm_type": @"配偶",
+          @"o_vip_name": model.name,
+          @"o_vip_card": model.cardno,
+          @"card_name": @[@"身份证正面",@"身份证反面",@"授权书",@"签字照"],
+          @"card_url": @[model.cardnoFrontphotoFilepath, model.cardnoBackphotoFilepath, model.authletterPhotoFilepath, model.signaturePhotoFilepath],
+          @"card_id": @[model.cardnoFrontphotoFilegroup, model.cardnoBackphotoFilegroup, model.authletterPhotoFilegroup, model.signaturePhotoFilegroup]
+          };
+        
+        [buyerInfoDtos addObject:person];
+        
+    }
+    //添加担保人
+    for (CreditBuyerModel *model in _guarantee.viewModel.dataList) {
+        NSDictionary *person = @{
+                                 @"cm_type": @"担保人",
+                                 @"o_vip_name": model.name,
+                                 @"o_vip_card": model.cardno,
+                                 @"card_name": @[@"身份证正面",@"身份证反面",@"授权书",@"签字照"],
+                                 @"card_url": @[model.cardnoFrontphotoFilepath, model.cardnoBackphotoFilepath, model.authletterPhotoFilepath, model.signaturePhotoFilepath],
+                                 @"card_id": @[model.cardnoFrontphotoFilegroup, model.cardnoBackphotoFilegroup, model.authletterPhotoFilegroup, model.signaturePhotoFilegroup]
+                                 };
+        
+        [buyerInfoDtos addObject:person];
+    }
+    //为了解决AFNetWorking的bug将buyerInfoDtos转换成json成为一个value
+    NSString *jsonStr = [JH_CommonInterface DataTOjsonString:buyerInfoDtos];
+    //最终完成数据的添加
+    [finalData setObject:(NSString *)jsonStr forKey:@"seat"];
+    
+    [JH_NetWorking requestData:[kBaseUrlStr_Local1 stringByAppendingString:kCreditHandle] HTTPMethod:HttpMethodPost  showHud:YES  params:[JH_NetWorking addKeyAndUIdForRequest:finalData] completionHandle:^(id result) {
+        if ([result[@"code"]isEqualToString:kSuccessCode]) {
+            
+            [MBProgressHUD MBProgressShowSuccess:YES WithTitle:result[@"info"] view:[UIApplication sharedApplication].keyWindow];
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                //移动到首页
+                [self.navigationController popToRootViewControllerAnimated:YES];
+            });
+        }else{
+            [MBProgressHUD MBProgressShowSuccess:NO WithTitle:result[@"info"] view:[UIApplication sharedApplication].keyWindow];
+        }
+        
+        
+    } errorHandle:^(NSError *error) {
+        
+    }];
+    
+}
+
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    
+}
+
+
+@end

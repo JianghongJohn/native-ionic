@@ -1,0 +1,13 @@
+//
+//  CarOrderAdvanceViewModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/9.
+//
+//
+
+#import "CarOrderAdvanceViewModel.h"
+
+@implementation CarOrderAdvanceViewModel
+
+@end

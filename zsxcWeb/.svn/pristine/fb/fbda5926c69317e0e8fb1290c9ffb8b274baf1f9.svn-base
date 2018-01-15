@@ -1,0 +1,529 @@
+//
+//  CarOrderViewCell.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/8.
+//
+//
+
+#import "CarOrderViewCell.h"
+@implementation CarOrderViewCell
+{
+    //同步请求
+    __block NSArray *_yearArray;
+    __block NSArray *_typeArray;
+}
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+    
+    // Configure the view for the selected state
+}
+
+
+//紧急联系人
+-(void)setUrgentList:(NSArray *)urgentList{
+    _urgentList = urgentList;
+    NSMutableArray *array = [NSMutableArray arrayWithArray:urgentList];
+    
+    for (int index = 0; index<urgentList.count; index++) {
+        Urgency *model = urgentList[index];
+        //urgentList内部就是实际的Urgency对象
+        for (int i = 0; i<[self Frame:model].count; i++) {
+            NSArray *frameData = [self Frame:model][i];
+            CGRect frame = CGRectMake(10+kScreen_Width/2*[frameData[0] floatValue], 10+80*index+40*[frameData[1] floatValue],[frameData[2]isEqual:@0]?kScreen_Width/2-20:kScreen_Width-20 , [frameData[3]isEqual:@0]?30:50);
+            
+            TypicatTextView *view = [[TypicatTextView alloc] initWithFrame:frame withType:[[self Type:model][i]integerValue] withTitle:[self TitleArray:model][i] withText:[model valueForKey:[self KeyArray:model][i]] withAddInfo:[self AddArray:model][i] titleArray:[self pickerArray:model][i] withNecessary:[[self isNeeded:model][i]isEqual:@1]?YES:NO];
+            view.typical = [self KeyArray:model][i];
+            if ([[self Type:model][i]integerValue] == TypicalViewText||[[self Type:model][i]integerValue] == TypicalViewTextNumber) {
+                
+                [view setInputBlock:^(NSString *text,NSString *typical){
+                    [model setValue:text forKey:typical];
+                    [array replaceObjectAtIndex:index withObject:model];
+                    _urgentList = array;
+                    _urgencyBlock(_urgentList,NO);
+                }];
+            }else{
+                [view setPickerBlock:^(NSString *value,NSString *text,NSString *typical){
+                    [model setValue:text forKey:typical];
+                    [array replaceObjectAtIndex:index withObject:model];
+                    _urgentList = array;
+                    _urgencyBlock(_urgentList,YES);
+                }];
+            }
+            [self.contentView addSubview:view];
+        }
+    }
+    
+    
+}
+
+/**
+ 根据model类型，区分进行单元格的布局
+ */
+-(void)setModel:(NSObject *)model{
+    _model = model;
+    //基础信息
+    [self creatInfoWithModel:model];
+    
+}
+#pragma mark - 添加信息
+-(void)creatInfoWithModel:(NSObject *)model{
+    for (int i = 0; i<[self Frame:model].count; i++) {
+        NSArray *frameData = [self Frame:model][i];
+        CGRect frame = CGRectMake(10+kScreen_Width/2*[frameData[0] floatValue], 10+40*[frameData[1] floatValue],[frameData[2]isEqual:@0]?kScreen_Width/2-20:kScreen_Width-20 , [frameData[3]isEqual:@0]?30:50);
+        NSString *text = [model valueForKey:[self KeyArray:model][i]];
+        
+        //省市区选择
+        if ([[self Type:model][i]integerValue]==TypicalViewPickerProvince) {
+            if ([text isKindOfClass:[NSArray class]]) {
+                NSArray *tempArray1 =  [model valueForKey:@"province"]?[model valueForKey:@"province"]:@[@""];
+                NSArray *tempArray2 =  [model valueForKey:@"city"]?[model valueForKey:@"city"]:@[@""];
+                NSArray *tempArray3 =  [model valueForKey:@"county"]?[model valueForKey:@"county"]:@[@""];
+                text = [NSString stringWithFormat:@"%@ %@ %@",tempArray1[0],tempArray2[0],tempArray3[0]];
+            }else{
+               text = [NSString stringWithFormat:@"%@ %@ %@",[model valueForKey:@"province"]?[model valueForKey:@"province"]:@"",[model valueForKey:@"city"]?[model valueForKey:@"city"]:@"",[model valueForKey:@"county"]?[model valueForKey:@"county"]:@""];
+            }
+            
+        }else{
+            if ([text isKindOfClass:[NSArray class]]) {
+                NSArray *tempArray =  (NSArray *)text;
+                text = tempArray[0]?tempArray[0]:@"";
+            };
+        }
+        //需要使text不为null
+        TypicatTextView *view = [[TypicatTextView alloc] initWithFrame:frame withType:[[self Type:model][i]integerValue] withTitle:[self TitleArray:model][i] withText:text==nil||[text isKindOfClass:[NSNull class]]?@"":text withAddInfo:[self AddArray:model][i] titleArray:[self pickerArray:model][i] withNecessary:[[self isNeeded:model][i]isEqual:@1]?YES:NO];
+        view.typical = [self KeyArray:model][i];
+        if ([[self Type:model][i]integerValue] == TypicalViewText||[[self Type:model][i]integerValue] == TypicalViewTextNumber) {
+            
+            [view setInputBlock:^(NSString *text,NSString *typical){
+                [_model setValue:text forKey:typical];
+                _refreshBlock(_model,NO);
+            }];
+        }else if ([[self Type:model][i]integerValue] == TypicalViewButton){
+            [view setButtonBlock:^(){
+                //计算合同价
+                _calculateBlock();
+            }];
+        }else{
+            [view setPickerBlock:^(NSString *value,NSString *text,NSString *typical){
+                if ([[self Type:model][i]integerValue]==TypicalViewPickerProvince) {
+                    ////省市区选择处理数据
+                    NSArray *data = [text componentsSeparatedByString:@"-"];
+                    [_model setValue:data[0] forKey:@"province"];
+                    [_model setValue:data[1] forKey:@"city"];
+                    [_model setValue:data[2] forKey:@"county"];
+                    
+                }else{
+                    
+                    [_model setValue:text forKey:typical];
+                }
+                _refreshBlock(_model,YES);
+            }];
+        }
+        [self.contentView addSubview:view];
+    }
+    
+}
+/**
+ 视图标题名称
+ */
+-(NSArray *)TitleArray:(NSObject *)model{
+    if ([model isKindOfClass:[Base class]]) {
+        if (self.type==CarOrderViewCellTypeAssue) {//担保人
+        return @[@"姓名:",@"学历:",@"户籍:",@"手机号:",@"婚否:",@"现住地址:",@"现住固话:"];
+        }
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@"姓名:",@"学历:",@"户籍:",@"手机号:",@"现住固话:",@"现住地址:"];
+        }
+        return @[@"姓名:",@"学历:",@"户籍:",@"手机号:",@"婚否:",@"现住地址:",@"现住固话:",@"实际家庭住址:"];
+    }
+    if ([model isKindOfClass:[House class]]) {
+        return @[@"房产地址:",@"房产所有权人:",@"与购车人关系:",@"房屋面积:",@"房屋性质:",@"房贷金额:",@"目前市价:",@"月还款额:",@"房贷年限:"];
+    }
+    if ([model isKindOfClass:[Work class]]) {
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@"公司名称:",@"单位地址:",@"公司电话:",@"单位类型:",@"职务类别:",@"职务:",@"经营期限:",@"工龄:",@"月收入:"];
+        }
+        return @[@"公司名称:",@"单位地址:",@"公司电话:",@"单位类型:",@"职务类别:",@"职务:",@"经营期限:",@"工龄:",@"所占股份:",@"月收入:"];
+    }
+    if ([model isKindOfClass:[Urgency class]]) {
+        return @[@"紧急联系人:",@"电话:",@"手机:",@"关系:"];
+    }
+    if ([model isKindOfClass:[Car class]]) {
+        if (self.type==CarOrderViewCellTypeCarInfoCalculate) {//合同价计算
+            return @[@"车价:",@"实际贷款额:",@"客户费率:",@"点击计算",@"实际首付款:",@"实际首付比例:",@"实际贷款比例:",@"分期付款金额:",@"合同价比例:",@"首期付款:",@"月还款:",@"手续费:"];
+        }else{
+            return @[@"车辆类型:",@"座位数:",@"车型:",@"上牌地:",@"车型构成:",@"是否公牌:",@"二手车登记日期:",@"二手车评估:",@"行驶证车主:",@"年限(月):",@"贷款银行:",@"产品类型"];
+        }
+    }
+    if ([model isKindOfClass:[Advance class]]) {
+        switch (self.type) {
+            case CarOrderViewCellTypeCarAdvance:
+             return @[@"是否家访:",@"促销情况:",@"收款单位:",@"发票开具单位:",@"开户银行:",@"账号:",@"结算方式:",@"GPS安装数量:",@"用款金额:",@"投保方案:",@"第一年投保、收益:",@"第二年投保、收益:",@"第三年投保、收益:"];
+                break;
+            case CarOrderViewCellTypeCarAdvanceIn:
+             return @[@"按揭服务费-高息部分:",@"按揭服务费-现金部分:",@"履约保证金:",@"渠道保证金:",@"按揭手续费:",@"上牌押金:",@"应收合计:",@"点击计算"];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOut:
+             return @[@"评估费:",@"公证费:",@"抵押费:",@"GPS费用:"];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOther:
+             return @[@"业务来源人",@"业务经办人:",@"业务经办日期:"];
+                break;
+            default:
+                break;
+        }
+    }
+    
+    return nil;
+}
+/**
+ model中的key，用于传递和赋值
+ */
+-(NSArray *)KeyArray:(NSObject *)model{
+    if ([model isKindOfClass:[Base class]]) {
+        if (self.type==CarOrderViewCellTypeAssue) {//担保人
+        return @[@"name",@"diploma",@"province",@"phone",@"marriagestatus",@"currentaddress",@"fixedphone"];
+        }
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@"name",@"diploma",@"province",@"phone",@"fixedphone",@"currentaddress"];
+        }
+        return @[@"name",@"diploma",@"province",@"phone",@"marriagestatus",@"currentaddress",@"fixedphone",@"realaddress"];
+    }
+    if ([model isKindOfClass:[House class]]) {
+        return @[@"address",@"owner",@"relationship",@"area",@"housingproperty",@"loanmoney",@"price",@"monthpay",@"loanage"];
+    }
+    
+    if ([model isKindOfClass:[Work class]]) {
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@"companyname",@"companyaddress",@"companyphone",@"industry",@"position",@"vocation",@"operatingperiod",@"workage",@"monthincome"];
+        }
+        return @[@"companyname",@"companyaddress",@"companyphone",@"industry",@"position",@"vocation",@"operatingperiod",@"workage",@"share",@"monthincome"];
+    }
+    if ([model isKindOfClass:[Urgency class]]) {
+        return @[@"name",@"fixedphone",@"phone",@"relationship"];
+    }
+    if ([model isKindOfClass:[Car class]]) {
+        if (self.type==CarOrderViewCellTypeCarInfoCalculate) {//合同价计算
+            return @[@"price",@"loanmoney",@"companyrate",@"pactcarprice",@"realpay",@"realpayratio",@"loanratio",@"refundmoney",@"pactpriceratio",@"firstpay",@"monthpay",@"agemoney"];
+        }else{
+
+            return @[@"vehicletype",@"seatnum",@"automotivetype",@"province",@"vehiclestruct",@"isboard",@"registtime",@"assess",@"owner",@"loanage",@"loanbank",@"loantype"];
+        }
+    }
+    if ([model isKindOfClass:[Advance class]]) {
+        switch (self.type) {
+            case CarOrderViewCellTypeCarAdvance:
+                return @[@"homevisit",@"sales",@"receiptorg",@"invoiceorg",@"bank",@"account",@"chargetype",@"gpsnum",@"money",@"insureway",@"firstinsure",@"secondinsure",@"thirdinsure"];
+                break;
+            case CarOrderViewCellTypeCarAdvanceIn:
+                return @[@"mortgagehigh",@"mortgagecash",@"keepprice",@"canalsprice",@"mortgageprice",@"gopledge",@"puttotal",@"puttotal"];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOut:
+                return @[@"assessfee",@"notaryfee",@"pledgefee",@"gpsfee"];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOther:
+                return @[@"from",@"agentman",@"agenttime"];
+                break;
+            default:
+                break;
+        }
+    }
+    return nil;
+}
+
+/**
+ 视图绘制的类型
+ */
+-(NSArray *)Type:(NSObject *)model{
+    if ([model isKindOfClass:[Base class]]) {
+        if (self.type==CarOrderViewCellTypeAssue) {//担保人
+        return @[@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewPickerProvince),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewText),@(TypicalViewTextNumber)];
+        }
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewPickerProvince),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewText)];
+        }
+        return @[@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewPickerProvince),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewText),@(TypicalViewTextNumber),@(TypicalViewText)];
+    }
+    if ([model isKindOfClass:[House class]]) {
+        return @[@(TypicalViewText),@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber)];
+    }
+    
+    if ([model isKindOfClass:[Work class]]) {
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+           return @[@(TypicalViewText),@(TypicalViewText),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewTextNumber)];
+        }
+        return @[@(TypicalViewText),@(TypicalViewText),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewTextNumber),@(TypicalViewTextNumber)];
+    }
+    if ([model isKindOfClass:[Urgency class]]) {
+        return @[@(TypicalViewText),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewPicker)];
+    }
+    if ([model isKindOfClass:[Car class]]) {
+        if (self.type==CarOrderViewCellTypeCarInfoCalculate) {//合同价计算
+            return @[@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewButton),@(TypicalViewTextEnable),@(TypicalViewTextEnable),@(TypicalViewTextEnable),@(TypicalViewTextEnable),@(TypicalViewTextEnable),@(TypicalViewTextEnable),@(TypicalViewTextEnable),@(TypicalViewTextEnable)];
+        }else{
+            //区分开是新车还是第二手车
+            Car *car = (Car *)model;
+            if ([car.vehiclestruct isEqualToString:@"二手车"]) {
+               return @[@(TypicalViewPicker),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewPickerProvince),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPickerDate),@(TypicalViewText),@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewTextEnable),@(TypicalViewPicker)];
+            }else{
+                return @[@(TypicalViewPicker),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewPickerProvince),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPickerEnable),@(TypicalViewTextEnable),@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewTextEnable),@(TypicalViewPicker)];
+            }
+            
+        }
+    }
+    if ([model isKindOfClass:[Advance class]]) {
+        switch (self.type) {
+            case CarOrderViewCellTypeCarAdvance:
+                return @[@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewText),@(TypicalViewText),@(TypicalViewText),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewTextNumber),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewPicker)];
+                break;
+            case CarOrderViewCellTypeCarAdvanceIn:
+                return @[@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextEnable),@(TypicalViewButton)];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOut:
+                return @[@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber),@(TypicalViewTextNumber)];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOther:
+                return @[@(TypicalViewText),@(TypicalViewText),@(TypicalViewPickerDate)];
+                break;
+            default:
+                break;
+        }
+    }
+    return nil;
+    
+}
+/**
+ 单行视图固定高度30，双行固定50，然后利用数组0123元素代表xywh
+ */
+-(NSArray *)Frame:(NSObject *)model{
+    if ([model isKindOfClass:[Base class]]) {
+        if (self.type==CarOrderViewCellTypeAssue) {//担保人
+         return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@1,@0],@[@0,@2,@0,@0],@[@1,@2,@0,@0],@[@0,@3,@1,@1],@[@0,@4.5,@1,@0]];
+        }
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@1,@0],@[@0,@2,@0,@0],@[@1,@2,@0,@0],@[@0,@3,@1,@1]];
+        }
+        return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@1,@0],@[@0,@2,@0,@0],@[@1,@2,@0,@0],@[@0,@3,@1,@1],@[@0,@4.5,@1,@0],@[@0,@5.5,@1,@1]];
+    }
+    if ([model isKindOfClass:[House class]]) {
+        return @[@[@0,@0,@1,@1],@[@0,@1.5,@0,@0],@[@1,@1.5,@0,@0],@[@0,@2.5,@0,@0],@[@1,@2.5,@0,@0],@[@0,@3.5,@0,@0],@[@1,@3.5,@0,@0],@[@0,@4.5,@0,@0],@[@1,@4.5,@0,@0]];
+    }
+    
+    if ([model isKindOfClass:[Work class]]) {
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@[@0,@0,@1,@0],@[@0,@1,@1,@1],@[@0,@2.5,@0,@0],@[@1,@2.5,@0,@0],@[@0,@3.5,@0,@0],@[@1,@3.5,@0,@0],@[@0,@4.5,@0,@0],@[@1,@4.5,@0,@0],@[@0,@5.5,@0,@0]];
+        }
+        return @[@[@0,@0,@1,@0],@[@0,@1,@1,@1],@[@0,@2.5,@0,@0],@[@1,@2.5,@0,@0],@[@0,@3.5,@0,@0],@[@1,@3.5,@0,@0],@[@0,@4.5,@0,@0],@[@1,@4.5,@0,@0],@[@0,@5.5,@0,@0],@[@1,@5.5,@0,@0]];
+    }
+    if ([model isKindOfClass:[Urgency class]]) {
+        return @[@[@0,@0,@0,@0],@[@01,@0,@0,@0],@[@0,@1,@0,@0],@[@1,@1,@0,@0]];
+    }
+    if ([model isKindOfClass:[Car class]]) {
+        if (self.type==CarOrderViewCellTypeCarInfoCalculate) {//合同价计算
+            return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@0,@0],@[@1,@1,@0,@0],@[@0,@2,@0,@0],@[@1,@2,@0,@0],@[@0,@3,@0,@0],@[@1,@3,@0,@0],@[@0,@4,@0,@0],@[@1,@4,@0,@0],@[@0,@5,@0,@0],@[@1,@5,@0,@0]];
+        }else{
+            return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@1,@0],@[@0,@2,@1,@0],@[@0,@3,@0,@0],@[@1,@3,@0,@0],@[@0,@4,@1,@0],@[@0,@5,@1,@0],@[@0,@6,@0,@0],@[@1,@6,@0,@0],@[@0,@7,@1,@0],@[@0,@8,@1,@0]];
+        }
+    }
+    if ([model isKindOfClass:[Advance class]]) {
+        switch (self.type) {
+            case CarOrderViewCellTypeCarAdvance:
+                return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@0,@0],@[@1,@1,@0,@0],@[@0,@2,@1,@0],@[@0,@3,@0,@0],@[@1,@3,@0,@0],@[@0,@4,@0,@0],@[@1,@4,@0,@0],@[@0,@5,@1,@0],@[@0,@6,@1,@0],@[@0,@7,@1,@0],@[@0,@8,@1,@0]];
+                break;
+            case CarOrderViewCellTypeCarAdvanceIn:
+                return @[@[@0,@0,@1,@0],@[@0,@1,@1,@0],@[@0,@2,@0,@0],@[@1,@2,@0,@0],@[@0,@3,@0,@0],@[@1,@3,@0,@0],@[@0,@4,@0,@0],@[@1,@4,@0,@0]];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOut:
+                 return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@0,@0],@[@1,@1,@0,@0]];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOther:
+                 return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@1,@0]];
+                break;
+            default:
+                break;
+        }
+    }
+    return nil;
+}
+/**
+ 是否必填
+ */
+-(NSArray *)isNeeded:(NSObject *)model{
+    if ([model isKindOfClass:[Base class]]) {
+        if (self.type==CarOrderViewCellTypeAssue) {//担保人
+        return @[@1,@1,@1,@1,@1,@1,@1];
+        }
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@1,@1,@1,@1,@1,@1];
+        }
+        return @[@1,@1,@1,@1,@1,@1,@1,@1];
+    }
+    if ([model isKindOfClass:[House class]]) {
+        return @[@1,@1,@1,@1,@1,@1,@1,@1,@1];
+    }
+    
+    if ([model isKindOfClass:[Work class]]) {
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@1,@1,@1,@1,@1,@1,@1,@1,@1];
+        }
+        return @[@1,@1,@1,@1,@1,@1,@1,@1,@1,@1];
+    }
+    if ([model isKindOfClass:[Urgency class]]) {
+        return @[@1,@1,@1,@1];
+    }
+    if ([model isKindOfClass:[Car class]]) {
+        if (self.type==CarOrderViewCellTypeCarInfoCalculate) {//合同价计算
+            return @[@1,@1,@1,@0,@0,@0,@0,@0,@0,@0,@0,@0];
+        }else{
+            return @[@1,@1,@1,@1,@1,@1,@1,@1,@1,@1,@1,@1];
+        }
+    }
+    if ([model isKindOfClass:[Advance class]]) {
+        switch (self.type) {
+            case CarOrderViewCellTypeCarAdvance:
+                return @[@1,@1,@1,@1,@1,@1,@1,@1,@1,@1,@1,@1,@1];
+                break;
+            case CarOrderViewCellTypeCarAdvanceIn:
+                return @[@1,@1,@1,@1,@1,@1,@0,@0];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOut:
+                return @[@1,@1,@1,@1];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOther:
+                return @[@1,@0,@0];
+                break;
+            default:
+                break;
+        }
+    }
+    return nil;
+}
+/**
+ 输入框后缀文字
+ */
+-(NSArray *)AddArray:(NSObject *)model{
+    if ([model isKindOfClass:[Base class]]) {
+        if (self.type==CarOrderViewCellTypeAssue) {//担保人
+        return @[@"",@"",@"",@"",@"",@"",@""];
+        }
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@"",@"",@"",@"",@"",@""];
+        }
+        return @[@"",@"",@"",@"",@"",@"",@"",@""];
+    }
+    if ([model isKindOfClass:[House class]]) {
+        return @[@"",@"",@"",@"㎡",@"",@"元",@"元",@"元",@"月"];
+    }
+    
+    if ([model isKindOfClass:[Work class]]) {
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@"",@"",@"",@"",@"",@"",@"",@"",@"元"];
+        }
+        return @[@"",@"",@"",@"",@"",@"",@"",@"",@"%",@"元"];
+    }
+    if ([model isKindOfClass:[Urgency class]]) {
+        return @[@"",@"",@"",@""];
+    }
+    if ([model isKindOfClass:[Car class]]) {
+        if (self.type==CarOrderViewCellTypeCarInfoCalculate) {//合同价计算
+            return @[@"元",@"元",@"%",@"",@"元",@"%",@"%",@"元",@"%",@"元",@"元",@"元"];
+        }else{
+            return @[@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@""];
+        }
+    }
+    if ([model isKindOfClass:[Advance class]]) {
+        switch (self.type) {
+            case CarOrderViewCellTypeCarAdvance:
+                 return @[@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@""];
+                break;
+            case CarOrderViewCellTypeCarAdvanceIn:
+                return @[@"元",@"元",@"元",@"元",@"元",@"元",@"元",@""];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOut:
+                return @[@"元",@"元",@"元",@"元"];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOther:
+                return @[@"",@"",@""];
+                break;
+            default:
+                break;
+        }
+    }
+    return nil;
+}
+/**
+ 数据字典选择的数组
+ */
+-(NSArray *)pickerArray:(NSObject *)model{
+    if ([model isKindOfClass:[Base class]]) {
+        if (self.type==CarOrderViewCellTypeAssue) {//担保人
+          return @[@"",[JHDownLoadFile getArrayByKey:@"diploma"],@"",@"",[JHDownLoadFile getArrayByKey:@"marriagestatus"],@"",@""];
+        }
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+            return @[@"",[JHDownLoadFile getArrayByKey:@"diploma"],@"",@"",@"",@""];
+        }
+        return @[@"",[JHDownLoadFile getArrayByKey:@"diploma"],@"",@"",[JHDownLoadFile getArrayByKey:@"marriagestatus"],@"",@"",@""];
+    }
+    if ([model isKindOfClass:[House class]]) {
+        return @[@"",@"",[JHDownLoadFile getArrayByKey:@"relationship"],@"",[JHDownLoadFile getArrayByKey:@"housingproperty"],@"",@"",@"",@""];
+    }
+    
+    if ([model isKindOfClass:[Work class]]) {
+        if (self.type==CarOrderViewCellTypeMate) {//配偶
+        return @[@"",@"",@"",[JHDownLoadFile getArrayByKey:@"industry"],[JHDownLoadFile getArrayByKey:@"position"],[JHDownLoadFile getArrayByKey:@"vocation"],[JHDownLoadFile getArrayByKey:@"operatingperiod"],[JHDownLoadFile getArrayByKey:@"workage"],@""];
+        }
+        return @[@"",@"",@"",[JHDownLoadFile getArrayByKey:@"industry"],[JHDownLoadFile getArrayByKey:@"position"],[JHDownLoadFile getArrayByKey:@"vocation"],[JHDownLoadFile getArrayByKey:@"operatingperiod"],[JHDownLoadFile getArrayByKey:@"workage"],@"",@""];
+    }
+    if ([model isKindOfClass:[Urgency class]]) {
+        return @[@"",@"",@"",[JHDownLoadFile getArrayByKey:@"relationship"]];
+    }
+    if ([model isKindOfClass:[Car class]]) {
+        if (self.type==CarOrderViewCellTypeCarInfoCalculate) {//合同价计算
+            return @[@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@"",@""];
+        }else{
+            
+            return [self getCarInfo:(Car *)model];
+        }
+    }
+    if ([model isKindOfClass:[Advance class]]) {
+        switch (self.type) {
+            case CarOrderViewCellTypeCarAdvance:
+              return @[@[@{@"text":@"是",@"value":@"1"},@{@"text":@"否",@"value":@"0"}],[JHDownLoadFile getArrayByKey:@"sales"],@"",@"",@"",@"",[JHDownLoadFile getArrayByKey:@"chargetype"],[JHDownLoadFile getArrayByKey:@"gpsnum"],@"",[JHDownLoadFile getArrayByKey:@"insureway"],[JHDownLoadFile getArrayByKey:@"securedparty"],[JHDownLoadFile getArrayByKey:@"securedparty"],[JHDownLoadFile getArrayByKey:@"securedparty"]];
+                break;
+            case CarOrderViewCellTypeCarAdvanceIn:
+                return @[@"",@"",@"",@"",@"",@"",@"",@""];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOut:
+                return @[@"",@"",@"",@""];
+                break;
+            case CarOrderViewCellTypeCarAdvanceOther:
+                return @[@"",@"",@""];
+                break;
+            default:
+                break;
+        }
+    }
+    return nil;
+    
+}
+
+/**
+ 加载汽车中的年限和贷款类型
+ */
+-(NSArray * )getCarInfo:(Car *)car{
+    if (_typeArray==nil||_yearArray==nil) {
+       _yearArray = [JHDownLoadFile getArrayByKey:@"yeartype_year"];
+       _typeArray = [JHDownLoadFile getArrayByKey:@"yeartype_type"];
+    }
+    return @[[JHDownLoadFile getArrayByKey:@"vehicletype"],@"",[JHDownLoadFile getArrayByKey:@"automotivetype"],@"",[JHDownLoadFile getArrayByKey:@"vehiclestruct"],@[@{@"text":@"是",@"value":@"1"},@{@"text":@"否",@"value":@"0"}],@"",@"",@"",_yearArray,@"",_typeArray];
+}
+
+
+
+@end

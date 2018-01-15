@@ -1,0 +1,27 @@
+//
+//  SignReadyController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/31.
+//
+//
+
+#import "SignReadyController.h"
+
+@interface SignReadyController ()
+
+@end
+
+@implementation SignReadyController
+
+
+#pragma mark - system (systemMethod override)
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.title = @"面签";
+}
+#pragma mark - UI (creatSubView and layout)
+#pragma mark - delegate
+#pragma mark - utilMethod
+
+@end

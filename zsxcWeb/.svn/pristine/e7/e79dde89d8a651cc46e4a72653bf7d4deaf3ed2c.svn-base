@@ -1,0 +1,41 @@
+//
+//  BaseKeys.h
+//  ZSXC_iOS
+//
+//  Created by hyjt on 2017/3/31.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#ifndef BaseKeys_h
+#define BaseKeys_h
+//客服电话
+#define kBaseServerTel @"tel:4001560808"
+//微信
+#define WX_APPID @"wxbd16f92713c59670"
+//极光
+#define JPushSDK_AppKey  @"fc0d4d1d86c8c870a84ee083"
+//下载地址
+#define kAppUrl @"http://itunes.apple.com/app/id1153461161"
+//评论地址
+#define kAppReviewURL @"itms-apps://itunes.apple.com/WebObjects/MZStore.woa/wa/viewContentsUserReviews?type=Purple+Software&id=1153461161"
+//本地测试地址
+//#define kBaseUrlStr_Local1 @"http://mobitest.haoyungroup.cn/"
+//#define kBaseUrlStr_Local2 @"http://mobitest.haoyungroup.cn/"
+#define kBaseUrlStr_Local1 @"http://chedai0.haoyungroup.cn/"
+#define kBaseUrlStr_Local2 @"http://chedai0.haoyungroup.cn/"
+
+#define kBaseUrlStr_Local3 @""
+//线上测试地址
+#define kBaseUrlStr_Test
+//生产地址
+#define kBaseUrlStr_Phone
+
+
+//一些查找或者通知的key
+#define ktoken @"carFinanceToken"
+#define kuserId @"carFinanceUserId"
+//通知
+#define kSetLogin @"kSetLogin"
+#define kSetTabbar @"kSetTabbar"
+#define kSubmitCarOrder @"kSubmitCarOrder"
+#endif /* BaseKeys_h */

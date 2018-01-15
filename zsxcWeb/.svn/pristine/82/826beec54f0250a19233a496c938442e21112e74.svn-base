@@ -1,0 +1,17 @@
+//
+//  CarOrderBuyerViewModel.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/8.
+//
+//
+
+#import "JH_ViewModelFactory.h"
+#import "Carman.h"
+#import "Baseinfo.h"
+@interface CarOrderBuyerViewModel : JH_ViewModelFactory
+@property(nonatomic,strong)Carman *carMan;
+@property(nonatomic,strong)Baseinfo *baseInfo;
+
+
+@end

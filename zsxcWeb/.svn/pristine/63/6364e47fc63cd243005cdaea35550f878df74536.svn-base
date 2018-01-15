@@ -1,0 +1,158 @@
+//
+//  CarOrderCarInfoViewModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/9.
+//
+//
+
+#import "CarOrderCarInfoViewModel.h"
+#import "CarOrderViewCell.h"
+@implementation CarOrderCarInfoViewModel
+-(NSInteger)JH_numberOfSection{
+    return 3;
+}
+-(NSInteger)JH_numberOfRow:(NSInteger)section{
+    return 1;
+}
+-(UITableViewCell *)JH_setUpTableViewCell:(NSIndexPath *)indexPath WithHandle:(void(^)())completionBlock{
+    CarOrderViewCell *cell = [[[NSBundle mainBundle]loadNibNamed:NSStringFromClass([CarOrderViewCell class]) owner:self options:nil]lastObject];
+    if (indexPath.section==0) {//车辆信息
+        cell.model = self.car;
+        [cell setRefreshBlock:^(NSObject *model){
+            self.car = (Car *)model;
+            completionBlock();
+        }];
+    }else if (indexPath.section==1){//合同价计算
+        cell.type = CarOrderViewCellTypeCarInfoCalculate;//指定类型
+        cell.model = self.car;
+        [cell setRefreshBlock:^(NSObject *model){
+            self.car = (Car *)model;
+            completionBlock();
+        }];
+        WeakSelf
+        [cell setCalculateBlock:^(){
+           //获取年限，车价，实际贷款额，客户利率，银行利率
+        //1.首先判断是否为空
+            if (self.car.loanage==nil||self.car.loanage.length==0||self.car.price==nil||self.car.price.length==0||self.car.loanmoney==nil||self.car.companyrate==nil||self.car.companyrate.length==0||self.car.province==nil||self.car.province.length==0||self.car.vehiclestruct==nil||self.car.vehiclestruct.length==0||self.car.loantype==nil||self.car.loantype.length==0) {
+                
+                [MBProgressHUD MBProgressShowSuccess:NO WithTitle:@"缺少必填项！" view:[UIApplication sharedApplication].keyWindow];
+                return ;
+            }
+            //获取银行利率
+            NSDictionary *requestData = @{@"ordernumber":weakSelf.baseInfo.ordernumber,
+                                          @"loantype":weakSelf.car.loantype,
+                                          @"loanage":weakSelf.car.loanage,
+                                          @"province":weakSelf.car.province,
+                                          @"vehiclestruct":weakSelf.car.vehiclestruct,
+                                          @"price":weakSelf.car.price,
+                                          @"loanmoney":weakSelf.car.loanmoney,
+                                          @"companyrate":weakSelf.car.companyrate
+                                          };
+            [JH_NetWorking requestData:[kBaseUrlStr_Local1 stringByAppendingString:kcalculateageinfo] HTTPMethod:HttpMethodPost showHud:YES params:[JH_NetWorking addKeyAndUIdForRequest:requestData] completionHandle:^(id result) {
+                if ([result[@"code"]isEqualToString:@"10000"]) {
+                    self.car.realpay = result[@"realpay"];
+                    self.car.realpayratio = result[@"realpayratio"];
+                    self.car.loanratio = result[@"refundmoney"];
+                    self.car.refundmoneyratio = result[@"refundmoneyratio"];
+                    self.car.agemoney = result[@"agemoney"];
+                    self.car.pactprice = result[@"pactprice"];
+                    self.car.pactpriceratio = result[@"pactpriceratio"];
+                    self.car.monthpay = result[@"monthpay"];
+                    self.car.firstpay = result[@"firstpay"];
+                    self.car.pactcarprice = result[@"pactcarprice"];
+                    self.car.bankrate = result[@"bankrate"];
+                    completionBlock();
+                }else{
+                    [MBProgressHUD MBProgressShowSuccess:NO WithTitle:result[@"info"] view:[UIApplication sharedApplication].keyWindow];
+                }
+                
+            } errorHandle:^(NSError *error) {
+                
+            }];
+
+        }];
+        
+    }else{//客户描述
+        TypicatTextView *view = [[TypicatTextView alloc] initWithFrame:CGRectMake(10, 10, kScreen_Width-20, 50) withType:TypicalViewText withTitle:@"描述：" withText:self.car.remark withAddInfo:@"" titleArray:@[] withNecessary:YES];
+        view.typical = @"remark";
+        [view setInputBlock:^(NSString *text,NSString *typical){
+            self.car.remark = text;
+            completionBlock();
+        }];
+        [cell.contentView addSubview:view];
+    }
+    
+    return cell;
+    
+}
+
+/**
+ 改变指定小数末尾，不为0则加一
+ */
+-(float)changeData:(float)number count:(NSInteger)count{
+    //10000对10驱余数即可判定小数第五位是否为0
+    NSInteger multipleNumber = 1;
+    for (int i = 0; i<count+1; i++) {
+        multipleNumber = multipleNumber*10;
+    }
+    if (((int)(number*multipleNumber))%10!=0) {
+        //第x位不为0
+        if (count==5) {
+            number = (((int)(number*10000))+1)/10000.0;
+        }
+        if (count==3) {
+            number = (((int)(number*100))+1)/100.0;
+        }
+    }
+    
+    return number;
+}
+
+-(CGFloat)JH_heightForCell:(NSIndexPath *)indexPath{
+    switch (indexPath.section) {
+            
+        case 0:
+            return 290;
+            break;
+        case 1:
+            return 250;
+            break;
+        default:
+            break;
+    }
+    return  70;
+}
+
+//分组标题
+-(NSString *)titleForSection:(NSInteger )section{
+    return @[@"车辆",@"合同价计算",@"描述"][section];
+}
+/**
+ 创建分组头视图
+ 
+ @param section NSIndexPath
+ @return view
+ */
+-(UIView *)JH_setUpTableSectionHeader:(NSInteger)section{
+
+    UIView *baseView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, kScreen_Width, 40)];
+    baseView.backgroundColor = [UIColor whiteColor];
+    //separateView
+    //tipView
+    UIView *separateView = [[UIView alloc] initWithFrame:CGRectMake(0,0,baseView.width, 10)];
+    separateView.backgroundColor = kBaseBGColor;
+    [baseView addSubview:separateView];
+    //tipView
+    CGFloat height = 15;
+    UIView *imageView = [[UIView alloc] initWithFrame:CGRectMake(10,separateView.height+height/2, 3, height)];
+    imageView.backgroundColor = kBaseColor;
+    [baseView addSubview:imageView];
+    //titleView
+    UILabel *titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(imageView.right+5, separateView.height,200, baseView.height-separateView.height)];
+    titleLabel.font = [UIFont systemFontOfSize:16];
+    titleLabel.text = [self titleForSection:section];
+    [baseView addSubview:titleLabel];
+    return baseView;
+}
+@end

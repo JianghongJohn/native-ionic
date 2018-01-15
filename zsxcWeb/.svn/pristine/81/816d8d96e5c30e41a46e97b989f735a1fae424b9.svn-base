@@ -1,0 +1,171 @@
+//
+//  TypicatTextView.m
+//  JHTypicalViewTest
+//
+//  Created by hyjt on 2017/5/5.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import "TypicatTextView.h"
+#import "JHCommonPickerView.h"
+@implementation TypicatTextView
+{
+    NSArray *_dataArray;
+}
+/*
+ init
+ */
+-(instancetype)initWithFrame:(CGRect)frame withType:(TypicalView )type withTitle:(NSString *)title withText:(NSString *)text withAddInfo:(NSString *)info titleArray:(NSArray<NSDictionary *> *)titleArray withNecessary:(BOOL)isNecessary{
+    self = [super initWithFrame:frame];
+    if (self) {
+        //给self加上边框
+        self.layer.borderColor = [UIColor lightGrayColor].CGColor;
+        self.layer.borderWidth = 0.5;
+        
+        switch (type) {
+            case TypicalViewText:
+                [self creatTextViewWithTitle:title withText:text withAddInfo:info withNecessary:isNecessary];
+                break;
+            case TypicalViewTextAdd:
+                
+                break;
+            case TypicalViewPicker:
+                _dataArray = titleArray;
+                [self creatTextViewWithTitle:title withText:text titleArray:titleArray withNecessary:YES];
+                break;
+            default:
+                break;
+        }
+    }
+    return self;
+}
+/**
+ 文字框
+ */
+-(void)creatTextViewWithTitle:(NSString *)title withText:(NSString *)text withAddInfo:(NSString *)info withNecessary:(BOOL)isNecessary{
+    //label
+    UILabel *label = [UILabel new];
+    label.font = [UIFont systemFontOfSize:12];
+    
+    [self addSubview:label];
+    [label mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).with.offset(5);
+        make.top.equalTo(self).with.offset(5);
+        make.height.equalTo(@20);
+    }];
+    if (isNecessary) {
+        label.attributedText = [self addNeedSymbol:title];
+    }else{
+        label.text = title;
+    }
+    //textView
+    _textView =[UITextView new];
+    _textView.text = text?text:@"";
+    _textView.font = [UIFont systemFontOfSize:12];
+    _textView.contentInset = UIEdgeInsetsMake(-5, 0, 0, 0);
+    _textView.delegate = self;
+    _textView.textColor = [UIColor darkGrayColor];
+    
+    [self addSubview:_textView];
+    [_textView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(label.mas_right).with.offset(5);
+        make.centerY.equalTo(self);
+        make.height.equalTo(self).with.offset(-10);
+        make.right.equalTo(self).with.offset(-15);
+        
+    }];
+    if (info.length!=0) {
+        //添加额外信息
+        UILabel *addLabel = [UILabel new];
+        addLabel.font = [UIFont systemFontOfSize:12];
+        [self addSubview:addLabel];
+        addLabel.text = info;
+        [addLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+            make.right.equalTo(self);
+            make.centerY.equalTo(label);
+            make.width.equalTo(@15);
+            make.height.equalTo(@15);
+        }];
+    }
+    [_textView layoutIfNeeded];
+    _textView.contentSize = CGSizeMake(_textView.frame.size.width, _textView.frame.size.height);
+
+}
+-(void)textViewDidChange:(UITextView *)textView{
+    //由于清空的时候出现偏移的bug，故这里手动设置容器大小
+    if (textView.text.length==0) {
+        _textView.contentSize = CGSizeMake(_textView.frame.size.width, _textView.frame.size.height);
+    }
+}
+-(void)textViewDidEndEditing:(UITextView *)textView{
+    //停止编辑的时候需要将数据返回
+    _inoutBlock(textView.text,_typical);
+}
+/**
+ 选择框
+ */
+-(void)creatTextViewWithTitle:(NSString *)title withText:(NSString *)text titleArray:(NSArray<NSDictionary *> *)titleArray withNecessary:(BOOL)isNecessary{
+    //标题label
+    UILabel *titleLabel = [UILabel new];
+    titleLabel.font = [UIFont systemFontOfSize:12];
+    titleLabel.text = title;
+    [self addSubview:titleLabel];
+    if (isNecessary) {
+        titleLabel.attributedText = [self addNeedSymbol:title];
+    }else{
+        titleLabel.text = title;
+    }
+    [titleLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(self).with.offset(5);
+        make.centerY.equalTo(self);
+    }];
+    //文字label
+    UILabel *pickerLabel = [UILabel new];
+    pickerLabel.font = [UIFont systemFontOfSize:12];
+    pickerLabel.numberOfLines = 2;
+    pickerLabel.text = text.length==0?@"请选择":text;
+    pickerLabel.textColor = [UIColor lightGrayColor];
+    [self addSubview:pickerLabel];
+    //将title的大小固定
+    [titleLabel setNeedsLayout];
+    [pickerLabel mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.left.equalTo(titleLabel.mas_right).with.offset(5);
+        make.centerY.equalTo(titleLabel);
+        make.right.equalTo(self).with.offset(-15);
+    }];
+    _pickerLabel = pickerLabel;
+    //往下图片
+    UIImageView *imageView = [UIImageView new];
+    [self addSubview:imageView];
+    imageView.image = [UIImage imageNamed:@"icon_more"];
+    [imageView mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.right.equalTo(self).with.offset(-2);
+        make.width.equalTo(@11);
+        make.height.equalTo(imageView.mas_width).multipliedBy(13/24.0);
+        make.centerY.equalTo(titleLabel);
+    }];
+    //添加点击事件
+    UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(_tapAction)];
+    [self addGestureRecognizer:tap];
+    
+}
+
+/**
+ 点击事件
+ */
+-(void)_tapAction{
+    JHCommonPickerView *picker = [[JHCommonPickerView alloc] initWithFrame:CGRectZero titleArray:_dataArray handler:^(NSString *value, NSString *text) {
+        _pickerBlock(value,text,_typical);
+    }];
+    [picker show];
+    
+}
+
+-(NSMutableAttributedString *)addNeedSymbol:(NSString *)text{
+    text = [NSString stringWithFormat:@"*%@",text];
+    NSMutableAttributedString *attribute = [[NSMutableAttributedString alloc] initWithString:text];
+    [attribute setAttributes:@{NSForegroundColorAttributeName :[UIColor redColor]} range:NSMakeRange(0, 1)];
+    return attribute;
+}
+
+@end

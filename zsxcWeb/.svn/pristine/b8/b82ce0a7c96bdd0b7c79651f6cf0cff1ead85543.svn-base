@@ -1,0 +1,145 @@
+//
+//  Root_InfoController.m
+//  carFinance
+//
+//  Created by hyjt on 2017/4/12.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import "Root_InfoController.h"
+#import "JH_MJTableView.h"
+#import "CreditInfoViewModel.h"
+#import "JHCustomMenu.h"
+@interface Root_InfoController ()<UITableViewDelegate,UITableViewDataSource,JH_MJTableViewDelegate,JHCustomMenuDelegate>
+@property(nonatomic,strong)JH_MJTableView *tableView;
+@property(nonatomic,strong)CreditInfoViewModel *viewModel;
+@property(nonatomic,strong)JHCustomMenu *menu;
+@property(nonatomic,assign)NSInteger page;
+@end
+
+@implementation Root_InfoController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    //右侧按钮
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"info_button"] style:0 target:self action:@selector(_rightAction)];
+    
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kNavHeight, 0, kTabbarHeight, 0));
+    }];
+    _viewModel = [[CreditInfoViewModel alloc] init];
+    _page = 1;
+    
+    [_viewModel JH_loadDataWithPage:_page data:nil completionHandle:^(id result) {
+        
+    } errorHandle:^(NSError *error) {
+        [self _creatNoNetWorkView];
+    } ressultHandle:^(JHRefreshState refresh) {
+        [self.tableView refreshEnd:refresh];
+        
+    }];
+    
+}
+
+/**
+ 导航栏右侧按钮，用于删选
+ */
+-(void)_rightAction{
+    
+        __weak __typeof(self) weakSelf = self;
+        if (!self.menu) {
+            self.menu = [[JHCustomMenu alloc] initWithDataArr:@[@"全部", @"退回"] origin:CGPointMake(kScreen_Width-130, kNavHeight) width:110 rowHeight:44];
+            _menu.delegate = self;
+            _menu.dismiss = ^() {
+                weakSelf.menu = nil;
+            };
+            _menu.arrImgName = @[@"info_icon_1", @"info_icon_2",];
+            [self.view addSubview:_menu];
+        } else {
+            [_menu dismissWithCompletion:^(JHCustomMenu *object) {
+                weakSelf.menu = nil;
+            }];
+        }
+}
+
+- (void)jhCustomMenu:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+//        NSLog(@"select: %ld", indexPath.row);
+}
+
+
+-(JH_MJTableView *)tableView{
+    if (_tableView==nil) {
+        
+        _tableView = [[JH_MJTableView alloc]initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        _tableView.JHDelegate = self;
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+    }
+    
+    return _tableView;
+}
+/**
+ 下拉刷新
+ */
+-(void)JH_MJTableViewFresh{
+    _page = 1;
+    [_viewModel JH_loadDataWithPage:_page data:nil completionHandle:^(id result) {
+        
+    } errorHandle:^(NSError *error) {
+        [self _creatNoNetWorkView];
+    } ressultHandle:^(JHRefreshState refresh) {
+        [self.tableView refreshEnd:refresh];
+        
+    }];
+    
+}
+/**
+ 上拉加载
+ */
+-(void)JH_MJTableViewLoadMore{
+    [_viewModel JH_loadDataWithPage:_page data:nil completionHandle:^(id result) {
+        
+    } errorHandle:^(NSError *error) {
+        [self _creatNoNetWorkView];
+    } ressultHandle:^(JHRefreshState refresh) {
+        [self.tableView refreshEnd:refresh];
+        
+    }];
+}
+
+#pragma mark - tableViewDataSource
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return [self.viewModel JH_numberOfSection];
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [self.viewModel JH_numberOfRow:section];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    return [self.viewModel JH_setUpTableViewCell:indexPath];
+}
+
+#pragma mark - tableViewDataDelegate
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return [self.viewModel JH_heightForCell:indexPath];
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0.1;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 10;
+}
+#pragma mark - 选中事件
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+//    [self.viewModel didSelectRowAndPush:indexPath vcName:nil dic:nil nav:self.navigationController];
+    
+}
+@end

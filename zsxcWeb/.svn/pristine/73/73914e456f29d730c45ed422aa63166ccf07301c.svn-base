@@ -1,0 +1,37 @@
+//
+//  Root_SignController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/5.
+//
+//
+
+#import "Root_SignController.h"
+
+@interface Root_SignController ()
+
+@end
+
+@implementation Root_SignController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

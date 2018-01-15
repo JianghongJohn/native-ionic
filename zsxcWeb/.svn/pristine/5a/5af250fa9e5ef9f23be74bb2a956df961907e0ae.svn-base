@@ -1,0 +1,39 @@
+//
+//  TypicatTextView.h
+//  JHTypicalViewTest
+//
+//  Created by hyjt on 2017/5/5.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import <UIKit/UIKit.h>
+#import "AddressPickerView.h"
+
+typedef void (^TypicalDataBlock) (NSString *value ,NSString *text,NSString *typical);
+typedef void (^InputDataBlock) (NSString *value ,NSString *text);
+typedef void (^ButtonBlock) ();
+//项目中一共需要三种类型的视图
+typedef NS_ENUM(NSInteger, TypicalView) {
+    TypicalViewText,
+    TypicalViewTextNumber,
+    TypicalViewPickerProvince,
+    TypicalViewPicker,
+    TypicalViewButton,
+    TypicalViewTextEnable,//不可编辑状态
+};
+@interface TypicatTextView : UIView<UITextViewDelegate,AddressPickerViewDelegate>
+
+@property (nonatomic ,strong) AddressPickerView * pickerView;
+@property(nonatomic,strong)UITextView *textView;
+@property(nonatomic,strong)UILabel *pickerLabel;
+@property(nonatomic,copy)NSString *typical;
+@property(nonatomic,strong)TypicalDataBlock pickerBlock;
+@property(nonatomic,strong)InputDataBlock InputBlock;
+@property(nonatomic,strong)ButtonBlock buttonBlock;
+/*
+ init
+ */
+-(instancetype)initWithFrame:(CGRect)frame withType:(TypicalView )type withTitle:(NSString *)title withText:(NSString *)text withAddInfo:(NSString *)info titleArray:(NSArray<NSDictionary *> *)titleArray withNecessary:(BOOL)isNecessary;
+
+
+@end

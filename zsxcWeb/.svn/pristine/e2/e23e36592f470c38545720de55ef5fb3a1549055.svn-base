@@ -1,0 +1,68 @@
+//
+//  CarOrderViewCell.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/8.
+//
+//
+
+#import "CarOrderViewCell.h"
+#import "TypicatTextView.h"
+@implementation CarOrderViewCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+
+-(void)setModel:(NSObject *)model{
+    _model = model;
+    //基础信息
+    if ([model isKindOfClass:[Base class]]) {
+        [self creatBaseInfoWithModel:(Base *)model];
+    }
+    
+}
+//人的基本信息
+-(void)creatBaseInfoWithModel:(Base *)model{
+    for (int i = 0; i<8; i++) {
+        NSArray *frameData = [self baseFrame][i];
+        CGRect frame = CGRectMake(10+kScreen_Width/2*[frameData[0] floatValue], 10+40*[frameData[1] floatValue],[frameData[2]isEqual:@0]?kScreen_Width/2-20:kScreen_Width-20 , [frameData[3]isEqual:@0]?30:50);
+        
+        TypicatTextView *view = [[TypicatTextView alloc] initWithFrame:frame withType:[[self baseType][i]integerValue] withTitle:[self baseTitleArray][i] withText:[model valueForKey:[self baseKeyArray][i]] withAddInfo:@"" titleArray:@[@{@"text":@"123",@"value":@"321"}] withNecessary:YES];
+        view.typical = [self baseKeyArray][i];
+        if ([[self baseType][i]integerValue] == 0) {
+            
+            [view setInoutBlock:^(NSString *text,NSString *typical){
+                [_model setValue:text forKey:typical];
+                _refreshBlock(_model);
+            }];
+        }else{
+            [view setPickerBlock:^(NSString *value,NSString *text,NSString *typical){
+                [_model setValue:value forKey:typical];
+                _refreshBlock(_model);
+            }];
+        }
+        [self.contentView addSubview:view];
+    }
+
+}
+-(NSArray *)baseTitleArray{
+    return @[@"姓名",@"学历",@"户籍",@"手机号",@"婚否",@"现住地址",@"现住固话",@"实际家庭住址"];
+}
+-(NSArray *)baseKeyArray{
+    return @[@"name",@"diploma",@"province",@"phone",@"marriagestatus",@"currentaddress",@"fixedphone",@"realaddress"];
+}
+-(NSArray *)baseType{
+    return @[@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewPicker),@(TypicalViewText),@(TypicalViewPicker),@(TypicalViewText),@(TypicalViewText),@(TypicalViewText)];
+}
+-(NSArray *)baseFrame{
+    return @[@[@0,@0,@0,@0],@[@1,@0,@0,@0],@[@0,@1,@1,@0],@[@0,@2,@0,@0],@[@1,@2,@0,@0],@[@0,@3,@1,@1],@[@0,@4.5,@1,@0],@[@0,@5.5,@1,@1]];
+}
+@end

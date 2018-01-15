@@ -1,0 +1,40 @@
+//
+//  Define.h
+//  ZSXC_iOS
+//
+//  Created by hyjt on 2017/3/31.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#ifndef Define_h
+#define Define_h
+//debug打印
+#define DebugLog(s, ...) NSLog(@"%s(%d): %@", __FUNCTION__, __LINE__, [NSString stringWithFormat:(s), ##__VA_ARGS__])
+//屏幕属性
+#define kScreen_Height [UIScreen mainScreen].bounds.size.height
+#define kScreen_Width [UIScreen mainScreen].bounds.size.width
+#define kNavHeight 64
+#define kTabbarHeight 49
+#define kDefaultRow 10
+//版本适配控制
+#define IOS9_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"9.0"] != NSOrderedAscending )
+#define IOS10_OR_LATER   ( [[[UIDevice currentDevice] systemVersion] compare:@"10.0"] != NSOrderedAscending )
+#define kDevice_Is_iPad UI_USER_INTERFACE_IDIOM()==UIUserInterfaceIdiomPad
+#define kDevice_Is_iPhone4 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 960), [[UIScreen mainScreen] currentMode].size) : NO)
+#define kDevice_Is_iPhone5 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(640, 1136), [[UIScreen mainScreen] currentMode].size) : NO)
+#define kDevice_Is_iPhone6 ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(750, 1334), [[UIScreen mainScreen] currentMode].size) : NO)
+#define kDevice_Is_iPhone6Plus ([UIScreen instancesRespondToSelector:@selector(currentMode)] ? CGSizeEqualToSize(CGSizeMake(1242, 2208), [[UIScreen mainScreen] currentMode].size) : NO)
+//常用宏定义
+//#define kTipAlert(_S_, ...)     [[[UIAlertView alloc] initWithTitle:@"提示" message:[NSString stringWithFormat:(_S_), ##__VA_ARGS__] delegate:self cancelButtonTitle:@"确定" otherButtonTitles:nil] show]
+#define kTipAlert(_S_, ...) UIAlertController *alertController = [UIAlertController alertControllerWithTitle:@"提示" message:[NSString stringWithFormat:(_S_), ##__VA_ARGS__] preferredStyle:UIAlertControllerStyleAlert];UIAlertAction *alert = [UIAlertAction actionWithTitle:@"确认" style:UIAlertActionStyleDefault handler:nil];[alertController addAction:alert];[[JH_CommonInterface presentingVC] presentViewController:alertController animated:YES completion:nil];
+
+#define UIIMAGE(imageName) [UIImage imageNamed:imageName]
+#define WeakSelf __weak typeof(self) weakSelf = self;
+
+//当前APP专属
+//#define kBaseColor [UIColor colorWithRed:21/255.f green:167/255.f blue:233/255.f alpha:1]
+#define kBaseColor [UIColor redColor]
+#define kBaseBGColor [UIColor colorWithWhite:0.93 alpha:1]
+#define kBaseTextColor [UIColor whiteColor]
+//[UIColor colorWithRed:28/255.f green:170/255.f blue:235/255.f alpha:1]
+#endif /* Define_h */

@@ -1,0 +1,28 @@
+//
+//  InTimeSIgnGPSController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/31.
+//
+//
+
+#import "InTimeSIgnGPSController.h"
+
+@interface InTimeSIgnGPSController ()
+
+@end
+
+@implementation InTimeSIgnGPSController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view from its nib.
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

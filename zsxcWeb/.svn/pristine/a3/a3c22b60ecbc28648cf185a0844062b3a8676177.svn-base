@@ -1,0 +1,43 @@
+//
+//  PushMessageDetailController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/7/21.
+//
+//
+
+#import "PushMessageDetailController.h"
+
+@interface PushMessageDetailController ()
+
+@end
+
+@implementation PushMessageDetailController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    [self _setMessageRead];
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+-(void)_setMessageRead{
+    if ([self.mes_is_read isEqualToString:@"0"]) {
+        NSDictionary *data = @{@"mes_id":self.mes_id,@"":@""};
+        [JH_NetWorking requestData:kJpushSet HTTPMethod:HttpMethodGet  showHud:YES params:data completionHandle:^(id result) {
+            
+        } errorHandle:^(NSError *error) {
+            
+            
+        }];
+    }
+   
+
+    
+    
+}
+
+@end

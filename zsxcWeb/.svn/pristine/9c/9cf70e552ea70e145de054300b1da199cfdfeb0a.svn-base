@@ -1,0 +1,15 @@
+//
+//  CreditGuaranteeController.h
+//  carFinance
+//
+//  Created by hyjt on 2017/4/12.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import "Root_BaseController.h"
+#import "CreditGuaranteeViewModel.h"
+@interface CreditGuaranteeController : Root_BaseController
+@property(nonatomic,strong)CreditGuaranteeViewModel *viewModel;
+@property(nonatomic,copy)NSString *ordernumber;
+@property(nonatomic,assign)NSInteger baseNumber;//原有的担保人数量
+@end

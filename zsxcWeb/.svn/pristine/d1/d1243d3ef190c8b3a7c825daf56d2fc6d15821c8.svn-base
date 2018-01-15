@@ -1,0 +1,80 @@
+//
+//  CarOrderPushMessageViewModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/7/18.
+//
+//
+
+#import "CarOrderPushMessageViewModel.h"
+#import "PushMessageCell.h"
+#import "PushMessageModel.h"
+@implementation CarOrderPushMessageViewModel
+
+/**
+ 加载数据并返回
+ 
+ @param data 请求的数据
+ @param completionblock 成功
+ @param errorblock 失败
+ */
+-(void)JH_loadTableDataWithData:(NSDictionary *)data completionHandle:(void (^)(id))completionblock errorHandle:(void (^)(NSError *))errorblock{
+    self.dataList = [[NSMutableArray alloc] init];
+    [JH_NetWorking requestData:kJpushList HTTPMethod:HttpMethodGet  showHud:YES params:data completionHandle:^(id result) {
+        if ([result[@"status"]isEqualToString:@"ok"]) {
+            
+            //处理数据
+            NSArray *recordList = result[@"data"];
+            for (NSDictionary *dic in recordList) {
+                
+                PushMessageModel *detailModel = [PushMessageModel mj_objectWithKeyValues:dic];
+                
+                [self.dataList addObject:detailModel];
+                
+            }
+            
+        }else{
+            
+        }
+        completionblock(result);
+    } errorHandle:^(NSError *error) {
+        errorblock(error);
+        
+    }];
+}
+
+
+
+-(NSInteger)JH_numberOfSection{
+//        return 3;
+    return 1;
+}
+-(NSInteger)JH_numberOfRow:(NSInteger)section{
+    return self.dataList.count;
+}
+-(UITableViewCell *)JH_setUpTableViewCell:(NSIndexPath *)indexPath{
+    PushMessageCell *pushCell = [[[NSBundle mainBundle]loadNibNamed:NSStringFromClass([PushMessageCell class]) owner:self options:nil]firstObject];
+    PushMessageModel *model = self.dataList[indexPath.row];
+    pushCell.model = model;
+    return pushCell;
+}
+
+
+-(CGFloat)JH_heightForCell:(NSIndexPath *)indexPath{
+    return 80;
+}
+-(void)didSelectRowAndPush:(NSIndexPath *)indexPath vcName:(NSString *)vcName dic:(NSDictionary *)dic nav:(UINavigationController *)nav{
+    
+    PushMessageModel *model = self.dataList[indexPath.row];
+    NSDictionary *data = @{
+                           @"mes_id":model.mes_id,
+                           @"mes_is_read":model.mes_is_read,
+                           @"mes_title":model.mes_title,
+                           @"mes_addtime":model.mes_addtime,
+                           @"mes_content":model.mes_content,
+                           };
+    
+    [JH_RuntimeTool runtimePush:vcName dic:@{@"mes_data":data} nav:nav];
+    
+}
+@end

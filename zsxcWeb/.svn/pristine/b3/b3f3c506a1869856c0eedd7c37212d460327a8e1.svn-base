@@ -1,0 +1,13 @@
+//
+//  PushMessageCell.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/7/18.
+//
+//
+
+#import <UIKit/UIKit.h>
+
+@interface PushMessageCell : UITableViewCell
+
+@end

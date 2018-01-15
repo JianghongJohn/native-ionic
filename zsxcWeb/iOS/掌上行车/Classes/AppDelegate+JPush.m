@@ -1,0 +1,104 @@
+//
+//  AppDelegate+JPush.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/7/21.
+//
+//
+
+#import "AppDelegate+JPush.h"
+
+@implementation AppDelegate (JPush)
+/**
+ APPDelegate的类别，添加数量推送信息的方法
+ */
+
+-(void)JPushApplication:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions{
+    
+    // 3.0.0及以后版本注册可以这样写，也可以继续用旧的注册方式
+    JPUSHRegisterEntity * entity = [[JPUSHRegisterEntity alloc] init];
+    entity.types = JPAuthorizationOptionAlert|JPAuthorizationOptionBadge|JPAuthorizationOptionSound;
+    if ([[UIDevice currentDevice].systemVersion floatValue] >= 8.0) {
+        //可以添加自定义categories
+        //    if ([[UIDevice currentDevice].systemVersion floatValue] >= 10.0) {
+        //      NSSet<UNNotificationCategory *> *categories;
+        //      entity.categories = categories;
+        //    }
+        //    else {
+        //      NSSet<UIUserNotificationCategory *> *categories;
+        //      entity.categories = categories;
+        //    }
+    }
+    [JPUSHService registerForRemoteNotificationConfig:entity delegate:self];
+    
+    // 或无广告符标识IDFA（尽量不用，避免上架审核被拒）
+    [JPushHelper setupWithOption:launchOptions appKey:JPushSDK_AppKey channel:nil apsForProduction:isProduction advertisingIdentifier:nil];
+    
+    // 2.1.9版本新增获取registration id block接口。
+    [JPUSHService registrationIDCompletionHandler:^(int resCode, NSString *registrationID) {
+        if(resCode == 0)
+        {
+            // iOS10获取registrationID放到这里了, 可以存到缓存里, 用来标识用户单独发送推送
+            NSLog(@"registrationID获取成功：%@",registrationID);
+        }
+        else
+        {
+            NSLog(@"registrationID获取失败，code：%d",resCode);
+        }
+    }];
+}
+
+- (void)application:(UIApplication *)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData *)deviceToken {
+    // Required - 注册 DeviceToken
+    [JPushHelper registerDeviceToken:deviceToken];
+}
+
+/**
+ 注册成功
+ */
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo {
+    
+    // Required,For systems with less than or equal to iOS6
+    [JPushHelper handleRemoteNotificationWithApplication:application userInfo:userInfo completion:nil];
+}
+
+/**
+ 接收到远程通知
+ */
+- (void)application:(UIApplication *)application didReceiveRemoteNotification:(NSDictionary *)userInfo fetchCompletionHandler:(void (^)(UIBackgroundFetchResult))completionHandler {
+    
+    // IOS 7 Support Required
+    [JPushHelper handleRemoteNotificationWithApplication:application userInfo:userInfo completion:completionHandler];
+    
+}
+/**
+ 注册失败
+ */
+- (void)application:(UIApplication *)application didFailToRegisterForRemoteNotificationsWithError:(NSError *)error {
+    //Optional
+    NSLog(@"did Fail To Register For Remote Notifications With Error: %@", error);
+}
+
+
+- (void)application:(UIApplication *)application didReceiveLocalNotification:(UILocalNotification *)notification {
+    [JPushHelper showLocalNotificationAtFront:notification];
+    return;
+}
+
+#ifdef NSFoundationVersionNumber_iOS_9_x_Max
+#pragma mark- JPUSHRegisterDelegate
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center willPresentNotification:(UNNotification *)notification withCompletionHandler:(void (^)(NSInteger))completionHandler {
+    
+    [JPushHelper jpushNotificationCenter:center willPresentNotification:notification];
+    completionHandler(UNNotificationPresentationOptionSound | UNNotificationPresentationOptionAlert);
+
+}
+
+- (void)jpushNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)())completionHandler {
+    
+    [JPushHelper jpushNotificationCenter:center didReceiveNotificationResponse:response];
+    
+    completionHandler();  // 系统要求执行这个方法
+}
+#endif
+@end

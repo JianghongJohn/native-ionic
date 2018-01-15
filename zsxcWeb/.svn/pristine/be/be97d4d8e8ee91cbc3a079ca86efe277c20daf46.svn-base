@@ -1,0 +1,39 @@
+#import <UIKit/UIKit.h>
+
+@interface CreditBuyerDetailModel : NSObject
+
+@property (nonatomic, strong) NSString * authletterPhotoFilegroup;
+@property (nonatomic, strong) NSString * authletterPhotoFilename;
+@property (nonatomic, strong) NSString * authletterPhotoFilepath;
+@property (nonatomic, strong) NSString * cardno;
+@property (nonatomic, strong) NSString * cardnoBackphotoFilegroup;
+@property (nonatomic, strong) NSString * cardnoBackphotoFilename;
+@property (nonatomic, strong) NSString * cardnoBackphotoFilepath;
+@property (nonatomic, strong) NSString * cardnoFrontphotoFilegroup;
+@property (nonatomic, strong) NSString * cardnoFrontphotoFilename;
+@property (nonatomic, strong) NSString * cardnoFrontphotoFilepath;
+@property (nonatomic, strong) NSObject * creater;
+@property (nonatomic, assign) NSInteger creditHandleId;
+@property (nonatomic, strong) NSString * creditRecord;
+@property (nonatomic, strong) NSString * creditStatus;
+@property (nonatomic, strong) NSString * ctime;
+@property (nonatomic, strong) NSString * ctimeStr;
+@property (nonatomic, assign) NSInteger idField;
+@property (nonatomic, strong) NSObject * isVerson;
+@property (nonatomic, strong) NSObject * isvalid;
+@property (nonatomic, strong) NSString * mtime;
+@property (nonatomic, strong) NSString * name;
+@property (nonatomic, strong) NSObject * orgId;
+@property (nonatomic, strong) NSString * remark;
+@property (nonatomic, strong) NSObject * rtime;
+@property (nonatomic, strong) NSString * sex;
+@property (nonatomic, strong) NSString * signaturePhotoFilegroup;
+@property (nonatomic, strong) NSString * signaturePhotoFilename;
+@property (nonatomic, strong) NSString * signaturePhotoFilepath;
+@property (nonatomic, strong) NSString * tel;
+@property (nonatomic, strong) NSString * type;
+@property (nonatomic, strong) NSObject * updater;
+@property (nonatomic, strong) NSString * validStatus;
+
+
+@end

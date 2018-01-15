@@ -1,0 +1,29 @@
+//
+//  InTimeSignBaseController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/6/1.
+//
+//
+
+#import "InTimeSignBaseController.h"
+
+@interface InTimeSignBaseController ()
+
+@end
+
+@implementation InTimeSignBaseController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+
+@end

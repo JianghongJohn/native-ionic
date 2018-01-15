@@ -1,0 +1,13 @@
+//
+//  InTimeSignPersonViewModel.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/6/1.
+//
+//
+
+#import "JH_ViewModelFactory.h"
+
+@interface InTimeSignPersonViewModel : JH_ViewModelFactory
+
+@end

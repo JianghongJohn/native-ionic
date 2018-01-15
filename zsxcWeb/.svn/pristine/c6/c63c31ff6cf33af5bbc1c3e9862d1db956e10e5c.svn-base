@@ -1,0 +1,13 @@
+//
+//  InTimeSignTogetherController.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/6/1.
+//
+//
+
+#import "Root_BaseController.h"
+
+@interface InTimeSignTogetherController : Root_BaseController
+
+@end

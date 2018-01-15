@@ -1,0 +1,28 @@
+//
+//  CarOrderGuaranteeController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/8.
+//
+//
+
+#import "CarOrderGuaranteeController.h"
+
+@interface CarOrderGuaranteeController ()
+
+@end
+
+@implementation CarOrderGuaranteeController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

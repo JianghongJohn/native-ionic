@@ -1,0 +1,50 @@
+//
+//  Root_InTimeSignController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/31.
+//
+//
+
+#import "Root_InTimeSignController.h"
+#import "InTimeSignListController.h"
+#import "InTimeSIgnGPSController.h"
+@interface Root_InTimeSignController ()
+
+@end
+
+@implementation Root_InTimeSignController
+
+#pragma mark - system (systemMethod override)
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.title = @"实时面签系统";
+}
+#pragma mark - UI (creatSubView and layout)
+#pragma mark - delegate
+#pragma mark - utilMethod
+
+- (IBAction)pushToSignList:(UIButton *)sender {
+    InTimeSignListController *list = [[InTimeSignListController alloc] init];
+    [self _pushViewController:list];
+    
+    
+}
+- (IBAction)pushToGPSList:(UIButton *)sender {
+    InTimeSIgnGPSController *list = [[InTimeSIgnGPSController alloc] init];
+    [self _pushViewController:list];
+}
+
+
+/*
+#pragma mark - Navigation
+
+// In a storyboard-based application, you will often want to do a little preparation before navigation
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
+    // Get the new view controller using [segue destinationViewController].
+    // Pass the selected object to the new view controller.
+}
+*/
+
+@end

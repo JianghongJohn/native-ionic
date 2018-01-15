@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" rowHeight="80" id="KGk-i7-Jjw" customClass="PushMessageCell">
+            <rect key="frame" x="0.0" y="0.0" width="465" height="80"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="465" height="79.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="状态" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Re8-7Z-9Ct">
+                        <rect key="frame" x="16" y="8" width="33" height="19.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="16"/>
+                        <color key="textColor" red="0.34901960784313724" green="0.34901960784313724" blue="0.34901960784313724" alpha="1" colorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="时间" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ouf-zv-4pT">
+                        <rect key="frame" x="422" y="10" width="25" height="14.5"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="12"/>
+                        <color key="textColor" red="0.78823529411764703" green="0.78823529411764703" blue="0.78823529411764703" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Hbq-qh-OJg">
+                        <rect key="frame" x="20" y="32.5" width="425" height="31.5"/>
+                        <string key="text">2017-07-21 16:31:19.585010+0800 掌上行车[9919:4151936] dnssd_clientstub write_all(13) DEFUNCT
+2017-07-21 16:31:23.824208+0800 掌上行车[9919:4151708]  | JIGUANG | E - [JIGUANGAddressControlle</string>
+                        <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                        <color key="textColor" red="0.78823529411764703" green="0.78823529411764703" blue="0.78823529411764703" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="FDx-4w-jsb">
+                        <rect key="frame" x="8" y="8" width="8" height="8"/>
+                        <color key="backgroundColor" red="1" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="FDx-4w-jsb" secondAttribute="height" id="05r-ST-hto"/>
+                            <constraint firstAttribute="height" constant="8" id="wrR-Td-YQc"/>
+                        </constraints>
+                    </view>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="FDx-4w-jsb" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="9Nc-Tw-sdo"/>
+                    <constraint firstAttribute="trailingMargin" secondItem="ouf-zv-4pT" secondAttribute="trailing" constant="10" id="Ahg-FN-IiX"/>
+                    <constraint firstAttribute="trailing" secondItem="Hbq-qh-OJg" secondAttribute="trailing" constant="20" id="Ncr-K3-2wz"/>
+                    <constraint firstItem="Re8-7Z-9Ct" firstAttribute="leading" secondItem="FDx-4w-jsb" secondAttribute="trailing" id="VtC-c0-2ec"/>
+                    <constraint firstItem="Hbq-qh-OJg" firstAttribute="top" secondItem="Re8-7Z-9Ct" secondAttribute="bottom" constant="5" id="cbX-bp-fvi"/>
+                    <constraint firstItem="Re8-7Z-9Ct" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" id="fjk-7d-EI8"/>
+                    <constraint firstItem="Hbq-qh-OJg" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="20" id="i6N-5d-ySB"/>
+                    <constraint firstItem="FDx-4w-jsb" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" id="j33-rH-G5j"/>
+                    <constraint firstItem="ouf-zv-4pT" firstAttribute="centerY" secondItem="Re8-7Z-9Ct" secondAttribute="centerY" id="xAB-1M-5UR"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="labContent" destination="Hbq-qh-OJg" id="oZu-Ef-LOy"/>
+                <outlet property="labStatus" destination="Re8-7Z-9Ct" id="lCr-mr-31S"/>
+                <outlet property="labTime" destination="ouf-zv-4pT" id="Jh9-5G-UfC"/>
+                <outlet property="viewRed" destination="FDx-4w-jsb" id="Et1-Mo-OKs"/>
+            </connections>
+            <point key="canvasLocation" x="47.5" y="-21"/>
+        </tableViewCell>
+    </objects>
+</document>

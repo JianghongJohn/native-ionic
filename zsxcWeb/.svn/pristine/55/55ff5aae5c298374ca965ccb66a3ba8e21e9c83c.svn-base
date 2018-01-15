@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12120" systemVersion="16E195" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12088"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <tableViewCell contentMode="scaleToFill" selectionStyle="none" accessoryType="disclosureIndicator" indentationWidth="10" rowHeight="60" id="KGk-i7-Jjw" customClass="CreditPickerCell">
+            <rect key="frame" x="0.0" y="0.0" width="320" height="60"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+            <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="KGk-i7-Jjw" id="H2p-sc-9uM">
+                <rect key="frame" x="0.0" y="0.0" width="287" height="59.5"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="p1.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="9VW-Ge-i0v">
+                        <rect key="frame" x="10" y="13" width="33.5" height="33.5"/>
+                        <constraints>
+                            <constraint firstAttribute="width" secondItem="9VW-Ge-i0v" secondAttribute="height" id="DNH-LQ-ro8"/>
+                        </constraints>
+                    </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="贷款银行" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JW5-xp-AuW">
+                        <rect key="frame" x="48.5" y="21" width="70" height="18"/>
+                        <constraints>
+                            <constraint firstAttribute="width" constant="70" id="clU-dL-6Bw"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" verticalHuggingPriority="251" text="请选择" textAlignment="right" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="bLW-T2-cCW">
+                        <rect key="frame" x="128.5" y="21" width="158.5" height="18"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                        <color key="textColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                        <color key="highlightedColor" cocoaTouchSystemColor="darkTextColor"/>
+                    </label>
+                </subviews>
+                <constraints>
+                    <constraint firstItem="bLW-T2-cCW" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="0Wk-3k-TFP"/>
+                    <constraint firstItem="9VW-Ge-i0v" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="5" id="6WM-DP-Lxd"/>
+                    <constraint firstItem="JW5-xp-AuW" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="LnI-Xr-j2I"/>
+                    <constraint firstItem="bLW-T2-cCW" firstAttribute="leading" secondItem="JW5-xp-AuW" secondAttribute="trailing" constant="10" id="VcG-Z7-G2t"/>
+                    <constraint firstItem="9VW-Ge-i0v" firstAttribute="centerY" secondItem="H2p-sc-9uM" secondAttribute="centerY" id="Ypa-6E-tkI"/>
+                    <constraint firstAttribute="trailing" secondItem="bLW-T2-cCW" secondAttribute="trailing" id="cNU-tX-AIg"/>
+                    <constraint firstItem="9VW-Ge-i0v" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leading" constant="10" id="xNg-RT-ZiZ"/>
+                    <constraint firstItem="JW5-xp-AuW" firstAttribute="leading" secondItem="9VW-Ge-i0v" secondAttribute="trailing" constant="5" id="zBG-Lb-AdZ"/>
+                </constraints>
+            </tableViewCellContentView>
+            <connections>
+                <outlet property="imgIcon" destination="9VW-Ge-i0v" id="brH-hh-M3j"/>
+                <outlet property="labSelect" destination="bLW-T2-cCW" id="p2I-fL-491"/>
+                <outlet property="labTitle" destination="JW5-xp-AuW" id="Z0i-X7-h6F"/>
+            </connections>
+            <point key="canvasLocation" x="25" y="44"/>
+        </tableViewCell>
+    </objects>
+    <resources>
+        <image name="p1.jpg" width="500" height="200"/>
+    </resources>
+</document>

@@ -1,0 +1,43 @@
+//
+//  SVCalculatePriceInfoCell.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/8/10.
+//
+//
+
+#import "SVCalculatePriceInfoCell.h"
+
+@implementation SVCalculatePriceInfoCell
+
+- (void)awakeFromNib {
+    [super awakeFromNib];
+    // Initialization code
+}
+
+- (void)setSelected:(BOOL)selected animated:(BOOL)animated {
+    [super setSelected:selected animated:animated];
+
+    // Configure the view for the selected state
+}
+-(void)setModel:(CalculatePriceModel *)model{
+    if (_model != model) {
+        _model = model;
+    }
+    
+    self.labRealPay.text = [self _stringWithAddition:_model.realpay addition:@"元"];
+    self.labRealPayRatio.text = [self _stringWithAddition:_model.realpayratio addition:@"%"];
+    self.labLoanRatio.text = [self _stringWithAddition:_model.loanratio addition:@"%"];
+    self.labRefunMoneyRatio.text = [self _stringWithAddition:_model.refundmoney addition:@"元"];
+    self.labPactPrice.text = [self _stringWithAddition:_model.pactprice addition:@"元"];
+    self.labPactPriceRatio.text = [self _stringWithAddition:_model.pactpriceratio addition:@"%"];
+    self.labFirstPay.text = [self _stringWithAddition:_model.firstpay addition:@"元"];
+    self.labMonthPay.text = [self _stringWithAddition:_model.monthMoney addition:@"元"];
+    self.labAgeMoney.text = [self _stringWithAddition:_model.agemoney addition:@"元"];
+    
+}
+-(NSString *)_stringWithAddition:(NSDecimalNumber *)string addition:(NSString *)addition{
+    
+    return [NSString stringWithFormat:@"%@%@",string?string:@"",addition];
+}
+@end

@@ -1,0 +1,13 @@
+//
+//  SignNewProjectBase.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/31.
+//
+//
+
+#import "Root_BaseController.h"
+
+@interface SignNewProjectBase : Root_BaseController
+
+@end

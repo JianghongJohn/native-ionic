@@ -1,0 +1,28 @@
+//
+//  CarSignController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/11.
+//
+//
+
+#import "CarSignController.h"
+
+@interface CarSignController ()
+
+@end
+
+@implementation CarSignController
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    // Do any additional setup after loading the view.
+}
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+
+@end

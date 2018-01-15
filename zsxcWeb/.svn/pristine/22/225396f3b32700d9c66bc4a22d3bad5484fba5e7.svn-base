@@ -1,0 +1,13 @@
+//
+//  CarOrderCarInfoViewModel.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/9.
+//
+//
+
+#import "JH_ViewModelFactory.h"
+#import "Car.h"
+@interface CarOrderCarInfoViewModel : JH_ViewModelFactory
+@property(nonatomic,strong)Car *car;
+@end

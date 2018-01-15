@@ -1,0 +1,135 @@
+//
+//  CreditInfoViewModel.m
+//  carFinance
+//
+//  Created by hyjt on 2017/4/17.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import "CreditInfoViewModel.h"
+#import "CreditInfoCell.h"
+#import "CreditInfoItem.h"
+#import "CreditInfoDetailController.h"
+@implementation CreditInfoViewModel
+
+-(NSDictionary *)testData{
+    NSError*error;
+    //获取文件路径
+    NSString *filePath = [[NSBundle mainBundle]pathForResource:@"creditList"ofType:@"json"];
+    
+    //根据文件路径读取数据
+    NSData *jdata = [[NSData alloc]initWithContentsOfFile:filePath];
+    
+    //格式化成json数据
+    id jsonObject = [NSJSONSerialization JSONObjectWithData:jdata options:NSJSONReadingMutableLeaves error:&error];
+    return jsonObject;
+}
+//static const NSInteger defaultRows = 10;
+/**
+ 加载数据并返回
+ 
+ @param data 请求的数据
+ @param completionblock 成功
+ @param errorblock 失败
+ */
+/**
+ 获取列表数据
+ */
+-(void)JH_loadDataWithPage:(NSInteger)page data:(NSMutableDictionary *)data completionHandle:(void (^)(id result))completionblock errorHandle:(void (^)(NSError * error))errorblock ressultHandle:(void (^)(JHRefreshState refreshSate))resultBlock{
+    if (page==1) {
+        
+        self.dataList = [NSMutableArray array];
+    }
+    [JH_NetWorking requestDataByJson:[kBaseUrlStr_Local1 stringByAppendingString:kCreditHandle] HTTPMethod:HttpMethodGet params:@{@"pageNum":@(page),@"numPerPage":@(kDefaultRow)} completionHandle:^(id result) {
+        if ([result[@"error"]isEqual:@1]) {
+            //处理数据
+            NSArray *recordList = result[@"rows"][@"recordList"];
+            for (NSDictionary *dic in recordList) {
+                
+                CreditInfoItem *detailModel = [CreditInfoItem mj_objectWithKeyValues:dic];
+                //重组可变数组
+                NSMutableArray *together = [[NSMutableArray alloc] init];
+                NSMutableArray *guarantee = [[NSMutableArray alloc] init];
+                for (NSDictionary  *dic in detailModel.buyerInfos) {
+                    CreditBuyerDetailModel *person = [CreditBuyerDetailModel mj_objectWithKeyValues:dic];
+                    if ([person.type isEqualToString:@"BUYER"]) {
+                        detailModel.buyer = person;
+                    }else if ([person.type isEqualToString:@"SPONSOR"]) {
+                        [guarantee addObject:person];
+                    }else if ([person.type isEqualToString:@"SHARED"]) {
+                        
+                        [together addObject:person];
+                    }
+                }
+                detailModel.togetherBuyer = together;
+                
+                detailModel.guarantee = guarantee;
+                
+                [self.dataList addObject:detailModel];
+
+            }
+            //将需要的刷新状态返回
+            if (page==1) {
+                if (recordList.count<kDefaultRow) {
+                    resultBlock(JHRefreshStateHeaderNoMore);
+                }else{
+                    
+                    resultBlock(JHRefreshStateHeader);
+                }
+            }else{
+                if (recordList.count<kDefaultRow) {
+                    resultBlock(JHRefreshStateFooterNoMore);
+                }else{
+                    
+                    resultBlock(JHRefreshStateFooter);
+                }
+            }
+            
+           
+        }else{
+         resultBlock(JHRefreshStateAll);
+        }
+    } errorHandle:^(NSError *error) {
+        resultBlock(JHRefreshStateAll);
+        errorblock(error);
+        
+    }];
+    
+    
+}
+
+
+-(NSInteger)JH_numberOfSection{
+//    return self.dataList.count;
+    return self.dataList.count;
+}
+-(NSInteger)JH_numberOfRow:(NSInteger)section{
+    return 1;
+}
+-(UITableViewCell *)JH_setUpTableViewCell:(NSIndexPath *)indexPath{
+    CreditInfoCell *creditCell = [[[NSBundle mainBundle]loadNibNamed:NSStringFromClass([CreditInfoCell class]) owner:self options:nil]firstObject];
+    if (self.dataList.count>0) {
+        
+        creditCell.item = self.dataList[indexPath.section];
+        WeakSelf
+        [creditCell setBlock:^(){
+            [weakSelf didSelectRowAndPush:indexPath vcName:nil dic:nil nav:[JH_CommonInterface presentingVC].navigationController];
+        }];
+    }
+    return creditCell;
+}
+
+
+-(CGFloat)JH_heightForCell:(NSIndexPath *)indexPath{
+    CreditInfoItem *item = self.dataList[indexPath.section];
+    return 80+(item.togetherBuyer.count+item.guarantee.count+1)*25+40;
+}
+-(void)didSelectRowAndPush:(NSIndexPath *)indexPath vcName:(NSString *)vcName dic:(NSDictionary *)dic nav:(UINavigationController *)nav{
+    CreditInfoDetailController *detail = [[CreditInfoDetailController alloc] init];
+    //model
+    CreditInfoItem *detailModel = self.dataList[indexPath.section];
+    detail.creditHandleId = [NSString stringWithFormat:@"%d",detailModel.buyer.creditHandleId];
+    detail.hidesBottomBarWhenPushed = YES;
+    [nav pushViewController:detail animated:YES];
+}
+@end

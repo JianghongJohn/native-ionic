@@ -1,0 +1,34 @@
+//
+//  JH_CommonInterface.h
+//  carFinance
+//
+//  Created by hyjt on 2017/4/12.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+//#import <MBProgressHUD.h>
+@interface JH_CommonInterface : NSObject
+//从资源包中加载不会占内存
++(UIImage *)LoadImageFromBundle:(NSString *)imageName;
+/**
+ 获取当前视图
+ 
+ @return UIViewController
+ */
++ (UIViewController *)presentingVC;
+
+/**
+ 获取viewController
+ */
++(UIViewController *)viewController :(UIResponder *)response;
+
+/**
+ 字典转json的类别
+ */
++(NSString*)DataTOjsonString:(id)object;
+// 递归获取子视图
+- (void)getSub:(UIView *)view andLevel:(int)level;
+//给字符添加上“*”o(╯□╰)o代表必填
++(NSMutableAttributedString *)addNeedSymbol:(NSString *)text;
+@end

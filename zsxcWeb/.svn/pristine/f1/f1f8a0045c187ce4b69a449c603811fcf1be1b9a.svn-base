@@ -1,0 +1,13 @@
+//
+//  InTimeSignModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/6/1.
+//
+//
+
+#import "InTimeSignModel.h"
+
+@implementation InTimeSignModel
+
+@end

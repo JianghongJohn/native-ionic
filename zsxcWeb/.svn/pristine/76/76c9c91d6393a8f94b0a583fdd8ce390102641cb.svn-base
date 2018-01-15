@@ -1,0 +1,14 @@
+//
+//  PushMessageDetailController.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/7/21.
+//
+//
+
+#import "Root_BaseController.h"
+
+@interface PushMessageDetailController : Root_BaseController
+@property(nonatomic,copy)NSString *mes_id;
+@property(nonatomic,copy)NSString *mes_is_read;
+@end

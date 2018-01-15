@@ -1,0 +1,18 @@
+//
+//  CreditPersonModel.h
+//  carFinance
+//
+//  Created by hyjt on 2017/4/17.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+@interface CreditPersonModel : NSObject
+@property (nonatomic, strong) NSString * idCard;
+@property (nonatomic, strong) NSString * creditHistory;
+@property (nonatomic, strong) NSString * creditState;
+@property (nonatomic, strong) NSString * mobile;
+@property (nonatomic, strong) NSString * name;
+@property (nonatomic, strong) NSString * sex;
+@end

@@ -1,0 +1,33 @@
+//
+//  InTimeSignModel.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/6/1.
+//
+//
+
+#import <Foundation/Foundation.h>
+
+@interface InTimeSignModel : NSObject
+
+@property (nonatomic, strong) NSString * cardnoBackphotoFilegroup;
+@property (nonatomic, strong) NSString * cardnoBackphotoFilename;
+@property (nonatomic, strong) NSString * cardnoBackphotoFilepath;
+@property (nonatomic, strong) NSString * cardnoFrontphotoFilegroup;
+@property (nonatomic, strong) NSString * cardnoFrontphotoFilename;
+@property (nonatomic, strong) NSString * cardnoFrontphotoFilepath;
+@property (nonatomic, strong) NSString * name;
+@property (nonatomic, strong) NSString * sex;
+@property (nonatomic, strong) NSString * cardno;
+@property (nonatomic, strong) NSString * tel;
+@property (nonatomic, strong) NSString * type;
+//贷款人才有的信息
+@property(nonatomic,copy)NSString *loanBank;
+@property(nonatomic,copy)NSString *businessType;
+@property(nonatomic,copy)NSString *loanMoney;
+@property(nonatomic,copy)NSString *loanTime;
+//图片信息
+@property(nonatomic,strong)UIImage *cardnoFrontphotoFile;
+@property(nonatomic,strong)UIImage *cardnoBackphotoFile;
+
+@end

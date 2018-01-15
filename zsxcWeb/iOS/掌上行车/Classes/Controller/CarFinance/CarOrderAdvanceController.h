@@ -1,0 +1,16 @@
+//
+//  CarOrderAdvanceController.h
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/8.
+//
+//
+
+#import "Root_BaseController.h"
+#import "CarOrderAdvanceViewModel.h"
+@interface CarOrderAdvanceController : Root_BaseController<UITableViewDelegate,UITableViewDataSource>
+
+@property(nonatomic,strong)UITableView *tableView;
+@property(nonatomic,strong)CarOrderAdvanceViewModel *viewModel;
+@property(nonatomic,assign)BOOL notAllowedEdit;
+@end

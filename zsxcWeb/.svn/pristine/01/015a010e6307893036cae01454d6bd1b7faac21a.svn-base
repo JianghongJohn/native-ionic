@@ -1,0 +1,41 @@
+//
+//  CreditInfoItem.h
+//  carFinance
+//
+//  Created by hyjt on 2017/4/17.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#import <Foundation/Foundation.h>
+
+#import "CreditBuyerDetailModel.h"
+/**
+ 适配器，用于传递Model数据到cell
+ */
+@interface CreditInfoItem : NSObject
+@property (nonatomic, strong) NSArray *buyerInfos;
+@property (nonatomic, strong) NSArray<CreditBuyerDetailModel *> * guarantee;
+@property (nonatomic, strong) CreditBuyerDetailModel * buyer;
+@property (nonatomic, strong) NSArray<CreditBuyerDetailModel *> * togetherBuyer;
+@property (nonatomic, assign) NSInteger  agentId;
+@property (nonatomic, strong) NSObject * creater;
+@property (nonatomic, strong) NSString * ctime;
+@property (nonatomic, strong) NSString * ctimeStr;
+@property (nonatomic, strong) NSString * dealer;
+@property (nonatomic, assign) NSInteger idField;
+@property (nonatomic, strong) NSObject * isVerson;
+@property (nonatomic, strong) NSObject * isvalid;
+@property (nonatomic, strong) NSString * loanBank;
+@property (nonatomic, strong) NSString * mtime;
+@property (nonatomic, assign) NSInteger number;
+@property (nonatomic, strong) NSObject * orgId;
+@property (nonatomic, strong) NSString * refuseReason;
+@property (nonatomic, strong) NSString * refuseTime;
+@property (nonatomic, strong) NSString * remark;
+@property (nonatomic, strong) NSString * rtime;
+@property (nonatomic, strong) NSString * status;
+@property (nonatomic, strong) NSObject * sysDepartment;
+@property (nonatomic, strong) NSString * type;
+@property (nonatomic, strong) NSObject * updater;
+@property (nonatomic, strong) NSString * validStatus;
+@end

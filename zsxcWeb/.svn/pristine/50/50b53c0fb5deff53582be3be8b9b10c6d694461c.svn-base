@@ -1,0 +1,99 @@
+//
+//  Root_MessageListController.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/7/18.
+//
+//
+
+#import "Root_MessageListController.h"
+#import "JH_MJTableView.h"
+#import "CarOrderPushMessageViewModel.h"
+
+@interface Root_MessageListController ()<UITableViewDelegate,UITableViewDataSource,JH_MJTableViewDelegate>
+@property(nonatomic,strong)JH_MJTableView *tableView;
+@property(nonatomic,strong)CarOrderPushMessageViewModel *viewModel;
+@end
+
+@implementation Root_MessageListController
+
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+
+    self.automaticallyAdjustsScrollViewInsets = NO;
+    [self.view addSubview:self.tableView];
+    [self.tableView mas_remakeConstraints:^(MASConstraintMaker *make) {
+        make.edges.equalTo(self.view).insets(UIEdgeInsetsMake(kNavHeight, 0, kTabbarHeight, 0));
+    }];
+    _viewModel = [[CarOrderPushMessageViewModel alloc] init];
+    
+    [self JH_MJTableViewFresh];
+}
+
+
+
+
+-(JH_MJTableView *)tableView{
+    if (_tableView==nil) {
+        
+        _tableView = [[JH_MJTableView alloc]initWithFrame:CGRectZero style:UITableViewStyleGrouped];
+        _tableView.separatorStyle = UITableViewCellSeparatorStyleNone;
+        //启用下拉刷新
+        [_tableView _setMJRefreshHeader];
+        _tableView.JHDelegate = self;
+        _tableView.delegate = self;
+        _tableView.dataSource = self;
+    }
+    
+    return _tableView;
+}
+/**
+ 下拉刷新
+ */
+-(void)JH_MJTableViewFresh{
+    NSString *user_id =  [JH_FileManager getObjectFromUserDefaultByKey:kuserId];
+    NSDictionary *data = @{@"user_id":user_id,
+                           @"app_name":@"掌上行车"
+                           };
+    
+    [_viewModel JH_loadTableDataWithData:data completionHandle:^(id result) {
+        [self.tableView.mj_header endRefreshing];
+        [self.tableView reloadData];
+    } errorHandle:^(NSError *error) {
+        
+        [self _creatNoNetWorkView];
+    }];
+
+}
+#pragma mark - tableViewDataSource
+-(NSInteger)numberOfSectionsInTableView:(UITableView *)tableView{
+    return [self.viewModel JH_numberOfSection];
+}
+- (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section;
+{
+    return [self.viewModel JH_numberOfRow:section];
+}
+
+- (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath;
+{
+    return [self.viewModel JH_setUpTableViewCell:indexPath];
+}
+
+#pragma mark - tableViewDataDelegate
+
+-(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
+    return [self.viewModel JH_heightForCell:indexPath];
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section{
+    return 0.1;
+}
+-(CGFloat)tableView:(UITableView *)tableView heightForHeaderInSection:(NSInteger)section{
+    return 0.1;
+}
+-(void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    [self.viewModel didSelectRowAndPush:indexPath vcName:@"PushMessageDetailController" dic:nil nav:self.navigationController];
+    
+}
+
+@end

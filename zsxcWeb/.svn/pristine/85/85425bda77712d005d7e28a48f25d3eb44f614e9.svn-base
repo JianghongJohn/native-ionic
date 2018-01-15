@@ -1,0 +1,28 @@
+//
+//  API.h
+//  carFinance
+//
+//  Created by hyjt on 2017/4/19.
+//  Copyright © 2017年 haoyungroup. All rights reserved.
+//
+
+#ifndef API_h
+#define API_h
+//登录
+#define kLogin @"Api/login"
+//上传文件
+#define kUploadFile @"Api/uploadattachment"
+//删除征信材料
+#define kDeleteFile @"Api/deleteattachment"
+//上传征信
+#define kCreditHandle @"Api/submitcredit"
+//数据字典
+#define kdict @"Api/getcombox"
+//文件浏览下载
+#define kviewFile @"fdfs/viewFdfsFile"
+//订单征信列表
+#define korderlist @"/Api/getorderlist"
+
+//订单详情
+#define kcreditDetail @"/Api/getOrderCreditDetail"
+#endif /* API_h */

@@ -1,0 +1,13 @@
+//
+//  CarOrderAssureViewModel.m
+//  掌上行车
+//
+//  Created by hyjt on 2017/5/9.
+//
+//
+
+#import "CarOrderAssureViewModel.h"
+
+@implementation CarOrderAssureViewModel
+
+@end
